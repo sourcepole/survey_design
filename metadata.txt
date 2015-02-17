@@ -6,6 +6,7 @@ version=0.3
 qgisMinimumVersion=2.0
 tracker=https://github.com/sourcepole/survey_design/issues
 repository=https://github.com/sourcepole/survey_design
+homepage=https://github.com/sourcepole/survey_design
 
 author=National Institute of Water and Atmospheric Research (NIWA)
 email=marco.hugentobler@sourcepole.ch
