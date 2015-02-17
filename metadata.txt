@@ -2,7 +2,7 @@
 name=Survey design plugin
 description=A plugin to design and evaluate biomass surveys along coast lines
 category=Vector
-version=0.2
+version=0.3
 qgisMinimumVersion=2.0
 tracker=https://github.com/sourcepole/survey_design/issues
 repository=https://github.com/sourcepole/survey_design
