@@ -386,7 +386,7 @@ class SurveyInitDialog( QDialog,  Ui_SurveyInitDialogBase ):
         strataMapLayer = QgsMapLayerRegistry.instance().mapLayer( strataLayer )
         baselineMapLayer = QgsMapLayerRegistry.instance().mapLayer( surveyBaselineLayer )
         transectSample = QgsTransectSample(  strataMapLayer, strataId , strataMinDistance, strataNSamplePoints, minDistanceUnits, baselineMapLayer, self.mShareBaselineCheckBox.isChecked(),
-        baselineStrataId, outputPointShape, outputLineShape,  usedBaselineShape,  self.mMinimumTransectLengthSpinBox.value() )
+        baselineStrataId, outputPointShape, outputLineShape,  usedBaselineShape,  self.mMinimumTransectLengthSpinBox.value(),  self.mBaselineBufferDistanceSpinBox.value(),  self. mBaselineSimplificationToleranceSpinBox.value() )
         pd = QProgressDialog(  'Calculating transects...', 'Abort',  0,  0,  self )
         pd.setWindowTitle( 'Transect generation' )
         pd.show();
