@@ -27,10 +27,10 @@ class SurveyEvaluationDialog( QDialog,  Ui_SurveyEvaluationDialogBase ):
         return self.mSpeciesVulnerabilitySpinBox.value()
 
     def sampleLayerId(self):
-        return self.mSampleLayerComboBox.itemData( self.mSampleLayerComboBox.currentIndex() ).toString()
+        return self.mSampleLayerComboBox.itemData( self.mSampleLayerComboBox.currentIndex() )
 
     def baselineClipLayerId(self):
-        return self.mBaselineLayerClipComboBox.itemData( self.mBaselineLayerClipComboBox.currentIndex() ).toString()
+        return self.mBaselineLayerClipComboBox.itemData( self.mBaselineLayerClipComboBox.currentIndex() )
 
     def stratumId(self):
         return self.mStratumIdComboBox.itemText( self.mStratumIdComboBox.currentIndex() )
@@ -65,8 +65,8 @@ class SurveyEvaluationDialog( QDialog,  Ui_SurveyEvaluationDialogBase ):
             return
 
         fieldMap = layer.pendingFields()
-        for key in fieldMap:
-            field = fieldMap[key]
+        for i in range(fieldMap.count() ):
+            field = fieldMap.at( i )
             if field.type() == QVariant.String:
                 continue
             self.mStratumIdComboBox.addItem( field.name() )

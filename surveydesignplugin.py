@@ -34,10 +34,10 @@ class SurveyDesignPlugin:
         self.iface.mainWindow().menuBar().removeAction( self.surveyDesignAction )
 
     def initSurveyDesign(self):
-        dialog = SurveyInitDialog( self.iface.mainWindow(),  self.iface)
+        self.initDialog = SurveyInitDialog( self.iface.mainWindow(),  self.iface)
         mainWindowGeom = self.iface.mainWindow().frameGeometry()
-        dialog.move( mainWindowGeom.width() / 2.0,  mainWindowGeom.top() )
-        dialog.show()
+        self.initDialog.move( mainWindowGeom.width() / 2.0,  mainWindowGeom.top() )
+        self.initDialog.show()
 
     def openSurveyDesignWidget(self):
         self.designDialog = SurveyDesignDialog( self.iface.mainWindow(),  self.iface )
