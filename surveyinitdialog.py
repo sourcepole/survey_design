@@ -338,7 +338,7 @@ class SurveyInitDialog( QDialog,  Ui_SurveyInitDialogBase ):
         QgsProject.instance().writeEntry( 'Survey', 'StrataId', self.strataId() )
         QgsProject.instance().writeEntry( 'Survey',  'MinTransectLength',  self.mMinimumTransectLengthSpinBox.value() )
         minDistanceUnitString = self.mMinDistanceUnitsComboBox.currentText()
-        print minDistanceUnitString
+        print (minDistanceUnitString)
         QgsProject.instance().writeEntry( 'Survey',  'StrataMinDistanceUnits',  minDistanceUnitString );
         self.setTransectButtonState()
         self.setSampleButtonState()
