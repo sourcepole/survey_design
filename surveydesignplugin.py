@@ -27,8 +27,3 @@ class SurveyDesignPlugin:
         mainWindowGeom = self.iface.mainWindow().frameGeometry()
         self.initDialog.move( mainWindowGeom.width() / 2.0,  mainWindowGeom.top() )
         self.initDialog.show()
-
-        if not strataLayerId:
-            return False
-        else:
-            return True

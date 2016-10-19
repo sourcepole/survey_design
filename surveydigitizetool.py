@@ -73,14 +73,18 @@ class SurveyDigitizeTool( QgsMapTool ):
         if event.button() == Qt.RightButton:
             if self.mEditLayer is None:
                 return
-            feature = QgsFeature()
-
+                
             #add default attributes
             fieldMap = self.mEditLayer.pendingFields()
-            for key in fieldMap:
-                feature.addAttribute( key,  self.mEditLayer.dataProvider().defaultValue( key ) )
+            feature = QgsFeature()
+            feature.initAttributes( fieldMap.size() )
+            
+            for i in range(0, fieldMap.size()):
+                    feature.setAttribute( i,  self.mEditLayer.dataProvider().defaultValue( i ) )
 
+            feature.setValid( True )
             attDialog = QgsAttributeDialog(  self.mEditLayer,  feature,  False )
+            
             if attDialog.exec_() == QDialog.Accepted:
                 feature.setGeometry( self.geometryFromPointList( self.mLayerCoordList ) )
                 self.mEditLayer.beginEditCommand('Add feature')
