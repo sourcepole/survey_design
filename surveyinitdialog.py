@@ -460,7 +460,7 @@ class SurveyInitDialog( QDialog,  Ui_SurveyInitDialogBase ):
         strataLayerId = QgsProject.instance().readEntry( 'Survey', 'StrataLayer' )[0]
         if not strataLayerId:
             return
-        self.stratumDigiTool = SurveyDigitizeTool( strataLayerId,  self.iface.mapCanvas(), strataLayerId,  20,  True  )
+        self.stratumDigiTool = SurveyDigitizeTool( strataLayerId,  self.iface.mapCanvas(), strataLayerId,  20  )
         self.stratumDigiTool.setButton( self.mAddStratumToolButton )
         if toggleState == True:
             self.iface.mapCanvas().setMapTool( self.stratumDigiTool )
@@ -473,7 +473,7 @@ class SurveyInitDialog( QDialog,  Ui_SurveyInitDialogBase ):
         surveyBaselineLayer = QgsProject.instance().readEntry( 'Survey', 'SurveyBaselineLayer')[0]
         if not surveyBaselineLayer:
             return
-        self.baselineDigiTool = SurveyDigitizeTool( surveyBaselineLayer,  self.iface.mapCanvas(),  surveyBaselineLayer,  20,  False )
+        self.baselineDigiTool = SurveyDigitizeTool( surveyBaselineLayer,  self.iface.mapCanvas(),  surveyBaselineLayer,  20 )
         self.baselineDigiTool.setButton( self.mAddBaselineToolButton  )
         if toggleState:
             self.iface.mapCanvas().setMapTool( self.baselineDigiTool )
@@ -486,7 +486,7 @@ class SurveyInitDialog( QDialog,  Ui_SurveyInitDialogBase ):
         surveyAreaLayer = QgsProject.instance().readEntry( 'Survey', 'SurveyAreaLayer' )[0]
         if not surveyAreaLayer:
             return
-        self.surveyAreaTool = SurveyDigitizeTool( surveyAreaLayer,  self.iface.mapCanvas(),  surveyAreaLayer,  20,  True )
+        self.surveyAreaTool = SurveyDigitizeTool( surveyAreaLayer,  self.iface.mapCanvas(),  surveyAreaLayer,  20 )
         self.surveyAreaTool.setButton( self.mAddSurveyAreaToolButton )
         if toggleState:
             self.iface.mapCanvas().setMapTool( self.surveyAreaTool )

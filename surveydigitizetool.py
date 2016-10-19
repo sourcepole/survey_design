@@ -5,16 +5,16 @@ from qgis.gui import *
 
 class SurveyDigitizeTool( QgsMapTool ):
 
-    def __init__( self,  digitizeLayer,  mapCanvas,  snapLayerId, snapTolerancePixels,  polygonMode ):
+    def __init__( self,  digitizeLayer,  mapCanvas,  snapLayerId, snapTolerancePixels ):
         QgsMapTool.__init__(self,  mapCanvas )
-        self.mPolygonMode = polygonMode #True: polygon, False: line
-        self.mRubberBand = QgsRubberBand( mapCanvas,  polygonMode )
-        self.mRubberBand.setColor( QColor( 255,  0,  0 ) )
-        self.mRubberBand.setWidth(  2 )
         self.mLayerCoordList = []
         self.mMapCanvas = mapCanvas
         self.mDigitizeLayerId = digitizeLayer
         self.mEditLayer = QgsMapLayerRegistry.instance().mapLayer(  self.mDigitizeLayerId )
+        self.mRubberBand = QgsRubberBand( mapCanvas,  self.mEditLayer.geometryType() )
+        self.mRubberBand.setColor( QColor( 255,  0,  0 ) )
+        self.mRubberBand.setWidth(  2 )
+        
 
         #Configure QgsSnapper with 20 pixel to given snap layer
         snapLayer = QgsSnapper.SnapLayer()
@@ -55,7 +55,6 @@ class SurveyDigitizeTool( QgsMapTool ):
             self.mEditLayer.startEditing()
 
     def deactivate( self ):
-        self.mRubberBand.reset( self.mPolygonMode )
         QApplication.restoreOverrideCursor()
 
         if not self.mEditLayer is None:
@@ -90,7 +89,7 @@ class SurveyDigitizeTool( QgsMapTool ):
                 self.mEditLayer.beginEditCommand('Add feature')
                 self.mEditLayer.addFeature( feature )
                 self.mEditLayer.endEditCommand()
-            self.mRubberBand.reset( self.mPolygonMode )
+            self.mRubberBand.reset(  self.mEditLayer.geometryType() == QGis.Polygon )
             del self.mLayerCoordList[:]
             self.mMapCanvas.refresh()
 
@@ -105,7 +104,7 @@ class SurveyDigitizeTool( QgsMapTool ):
             return self.toMapCoordinates( pos )
 
     def geometryFromPointList(self,  pointList):
-        if self.mPolygonMode:
+        if self.mEditLayer.geometryType() == QGis.Polygon:
             return QgsGeometry.fromPolygon(  [pointList] )
         else:
             return QgsGeometry.fromPolyline( pointList )
