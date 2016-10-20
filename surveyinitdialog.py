@@ -471,9 +471,15 @@ class SurveyInitDialog( QDialog,  Ui_SurveyInitDialogBase ):
     @pyqtSlot()
     def addBaselineToggled(self,  toggleState ):
         surveyBaselineLayer = QgsProject.instance().readEntry( 'Survey', 'SurveyBaselineLayer')[0]
+        strataLayer = QgsProject.instance().readEntry( 'Survey', 'StrataLayer' )[0]
         if not surveyBaselineLayer:
             return
-        self.baselineDigiTool = SurveyDigitizeTool( surveyBaselineLayer,  self.iface.mapCanvas(),  surveyBaselineLayer,  20 )
+            
+        snapLayer = strataLayer
+        if not strataLayer:
+            snapLayer = surveyBaselineLayer
+            
+        self.baselineDigiTool = SurveyDigitizeTool( surveyBaselineLayer,  self.iface.mapCanvas(),  snapLayer,  20 )
         self.baselineDigiTool.setButton( self.mAddBaselineToolButton  )
         if toggleState:
             self.iface.mapCanvas().setMapTool( self.baselineDigiTool )
