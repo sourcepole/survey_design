@@ -15,18 +15,9 @@ class SurveyDigitizeTool( QgsMapTool ):
         self.mRubberBand.setColor( QColor( 255,  0,  0 ) )
         self.mRubberBand.setWidth(  2 )
         
-
-        #Configure QgsSnapper with 20 pixel to given snap layer
-        snapLayer = QgsSnapper.SnapLayer()
-        snapLayer.mTolerance = 20
-        snapLayer.mUnitType = QgsTolerance.Pixels
-        snapLayer.mSnapTo = QgsSnapper.SnapToVertexAndSegment
-        snapLayer.mLayer = QgsMapLayerRegistry.instance().mapLayer(  snapLayerId )
-        snapLayerList = []
-        snapLayerList.append( snapLayer )
-        self.mSnapper = QgsSnapper( mapCanvas.mapRenderer() )
-        self.mSnapper.setSnapLayers( snapLayerList )
-        self.mSnapper.setSnapMode( QgsSnapper.SnapWithOneResult )
+        self.mSnapToLayer = QgsMapLayerRegistry.instance().mapLayer(  snapLayerId )
+        self.mPointLocator = QgsPointLocator( self.mSnapToLayer )
+        self.mPointLocator.init()
         
         #Tracing to snap layer
         self.mTracer = QgsTracer()
@@ -70,7 +61,7 @@ class SurveyDigitizeTool( QgsMapTool ):
         QgsMapTool.deactivate( self )
 
     def canvasMoveEvent(self,  event ):
-        currentPoint = self.snappedPoint( event.pos() )
+        currentPoint = self.snapPoint( event.pos() )
         
         #tracing?
         rubberBandPointCount = self.mRubberBand.partSize( 0 )
@@ -90,7 +81,7 @@ class SurveyDigitizeTool( QgsMapTool ):
         self.mRubberBand.movePoint( currentPoint )
 
     def canvasReleaseEvent(self,  event ):
-        currentPoint = self.snappedPoint( event.pos() )
+        currentPoint = self.snapPoint( event.pos() )
         
         #tracing?
         if len( self.mLayerCoordList ) > 0:
@@ -146,3 +137,14 @@ class SurveyDigitizeTool( QgsMapTool ):
 
     def isEditTool(self):
         return True
+        
+    def mapSnapSearchDistance(self,  pixelDistance ):
+        pixels = pixelDistance * self.mMapCanvas.mapSettings().mapToPixel().mapUnitsPerPixel()
+        return pixels
+        
+    def snapPoint(self,  screenPoint ):
+        currentPoint = self.toMapCoordinates( screenPoint )
+        snapMatch = self.mPointLocator.nearestVertex( currentPoint, self.mapSnapSearchDistance( 20 )  )
+        if snapMatch.type() == QgsPointLocator.Vertex or snapMatch.type() == QgsPointLocator.Edge:
+            currentPoint = snapMatch.point()
+        return currentPoint
