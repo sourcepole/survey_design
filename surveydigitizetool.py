@@ -124,7 +124,7 @@ class SurveyDigitizeTool( QgsMapTool ):
                 self.mEditLayer.beginEditCommand('Add feature')
                 self.mEditLayer.addFeature( feature )
                 self.mEditLayer.endEditCommand()
-            self.mRubberBand.reset(  self.mEditLayer.geometryType() == QGis.Polygon )
+            self.mRubberBand.reset(  self.mEditLayer.geometryType() )
             del self.mLayerCoordList[:]
             self.mMapCanvas.refresh()
 
