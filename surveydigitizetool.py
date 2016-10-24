@@ -27,7 +27,14 @@ class SurveyDigitizeTool( QgsMapTool ):
         self.mSnapper = QgsSnapper( mapCanvas.mapRenderer() )
         self.mSnapper.setSnapLayers( snapLayerList )
         self.mSnapper.setSnapMode( QgsSnapper.SnapWithOneResult )
-
+        
+        #Tracing to snap layer
+        self.mTracer = QgsTracer()
+        traceLayerList = []
+        traceLayerList.append( QgsMapLayerRegistry.instance().mapLayer( snapLayerId ) )
+        self.mTracer.setLayers( traceLayerList )
+        self.mTracer.setDestinationCrs( self.mMapCanvas.mapSettings().destinationCrs() )
+        
         self.cursor = QCursor(QPixmap(["16 16 3 1",
                                   "      c None",
                                   ".     c #000000",
@@ -63,12 +70,40 @@ class SurveyDigitizeTool( QgsMapTool ):
         QgsMapTool.deactivate( self )
 
     def canvasMoveEvent(self,  event ):
-        self.mRubberBand.movePoint( self.snappedPoint( event.pos() ) )
+        currentPoint = self.snappedPoint( event.pos() )
+        
+        #tracing?
+        rubberBandPointCount = self.mRubberBand.partSize( 0 )
+        if rubberBandPointCount >= 2:
+           lastPoint = self.mRubberBand.getPoint( 0,  rubberBandPointCount - 2 ) 
+           if( self.mTracer.isPointSnapped( lastPoint ) and self.mTracer.isPointSnapped( currentPoint ) ):
+               tracedPoints = self.mTracer.findShortestPath(  lastPoint,  currentPoint )[0]
+               
+               if len( tracedPoints ) >= 3:
+                   #remove the last point in rubber band and add all the tracing points [1:size - 1]
+                   self.mRubberBand.removeLastPoint( 0 )
+                   for i in range ( 1,  len( tracedPoints ) - 1 ):
+                       self.mRubberBand.addPoint( tracedPoints[i],  False )
+                   self.mRubberBand.update()
+                   self.mRubberBand.addPoint( tracedPoints[len(tracedPoints)-1]  )
+                   
+        self.mRubberBand.movePoint( currentPoint )
 
     def canvasReleaseEvent(self,  event ):
-        point = self.snappedPoint( event.pos() )
-        self.mLayerCoordList.append(  self.toLayerCoordinates(  self.mEditLayer,  point ) )
-        self.mRubberBand.addPoint( point )
+        currentPoint = self.snappedPoint( event.pos() )
+        
+        #tracing?
+        if len( self.mLayerCoordList ) > 0:
+            lastMapPoint = self.toMapCoordinates( self.mEditLayer,  self.mLayerCoordList[-1] )
+            if self.mTracer.isPointSnapped( currentPoint ) and self.mTracer.isPointSnapped( lastMapPoint ):
+                tracedPoints = self.mTracer.findShortestPath( lastMapPoint,  currentPoint )[0]
+                if len( tracedPoints ) > 2:
+                    for i in range ( 1,  len( tracedPoints ) - 1 ):
+                        self.mLayerCoordList.append( self.toLayerCoordinates( self.mEditLayer,  tracedPoints[i] ) )
+                
+        self.mLayerCoordList.append(  self.toLayerCoordinates(  self.mEditLayer,  currentPoint ) )
+        self.mRubberBand.addPoint( currentPoint )
+        
         if event.button() == Qt.RightButton:
             if self.mEditLayer is None:
                 return
