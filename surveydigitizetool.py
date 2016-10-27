@@ -16,8 +16,6 @@ class SurveyDigitizeTool( QgsMapTool ):
         self.mRubberBand.setWidth(  2 )
         
         self.mSnapToLayer = QgsMapLayerRegistry.instance().mapLayer(  snapLayerId )
-        self.mPointLocator = QgsPointLocator( self.mSnapToLayer )
-        self.mPointLocator.init()
         
         #Tracing to snap layer
         self.mTracer = QgsTracer()
@@ -64,6 +62,8 @@ class SurveyDigitizeTool( QgsMapTool ):
         currentPoint = self.snapPoint( event.pos() )
         
         #tracing?
+        self.mTracer.setDestinationCrs( self.mMapCanvas.mapSettings().destinationCrs() )
+        self.mTracer.setCrsTransformEnabled( True )
         rubberBandPointCount = self.mRubberBand.partSize( 0 )
         if rubberBandPointCount >= 2:
            lastPoint = self.mRubberBand.getPoint( 0,  rubberBandPointCount - 2 ) 
@@ -84,6 +84,8 @@ class SurveyDigitizeTool( QgsMapTool ):
         currentPoint = self.snapPoint( event.pos() )
         
         #tracing?
+        self.mTracer.setDestinationCrs( self.mMapCanvas.mapSettings().destinationCrs() )
+        self.mTracer.setCrsTransformEnabled( True )
         if len( self.mLayerCoordList ) > 0:
             lastMapPoint = self.toMapCoordinates( self.mEditLayer,  self.mLayerCoordList[-1] )
             if self.mTracer.isPointSnapped( currentPoint ) and self.mTracer.isPointSnapped( lastMapPoint ):
@@ -143,6 +145,8 @@ class SurveyDigitizeTool( QgsMapTool ):
         return pixels
         
     def snapPoint(self,  screenPoint ):
+        self.mPointLocator = QgsPointLocator( self.mSnapToLayer,  self.mMapCanvas.mapSettings().destinationCrs() )
+        self.mPointLocator.init()
         currentPoint = self.toMapCoordinates( screenPoint )
         snapMatch = self.mPointLocator.nearestVertex( currentPoint, self.mapSnapSearchDistance( 20 )  )
         if snapMatch.type() == QgsPointLocator.Vertex or snapMatch.type() == QgsPointLocator.Edge:
