@@ -192,6 +192,7 @@ class SurveyInitDialog( QDialog,  Ui_SurveyInitDialogBase ):
                     self.mStrataIdAttributeComboBox.addItem( field.name() )
 
     def createNewStrataLayer( self ):
+        return #disable until there is a replacement for the old dialog
         attributeList = []
         #samples per polygon
         nPointsAttribute = QgsNewVectorLayerDialog.AttributeEntry()
@@ -215,6 +216,7 @@ class SurveyInitDialog( QDialog,  Ui_SurveyInitDialogBase ):
             self.mStrataLayerComboBox.setCurrentIndex( self.mStrataLayerComboBox.findData( vlayer.id() ) )
 
     def createNewSurveyAreaLayer( self ):
+        return #disable until there is a replacement for the old dialog
         filename = QgsNewVectorLayerDialog.runAndCreateLayer( None, 'UTF-8', QGis.Polygon )
         if filename:
             vlayer = self.iface.addVectorLayer( filename,  QFileInfo( filename ).baseName(),  'ogr')
@@ -222,6 +224,7 @@ class SurveyInitDialog( QDialog,  Ui_SurveyInitDialogBase ):
             self.mSurveyAreaLayerComboBox.setCurrentIndex( self.mSurveyAreaLayerComboBox.findData(  vlayer.id())  )
 
     def createNewBaselineLayer( self ):
+        return #disable until there is a replacement for the old dialog
         attributeList = []
         #strata id
         strataIdAttribute = QgsNewVectorLayerDialog.AttributeEntry()
@@ -237,6 +240,7 @@ class SurveyInitDialog( QDialog,  Ui_SurveyInitDialogBase ):
             self.mSurveyBaselineLayerComboBox.setCurrentIndex( self.mSurveyBaselineLayerComboBox.findData( vlayer.id() ) )
 
     def createStrataMinDistAttribute( self ):
+        return #disable until there is a replacement for the old dialog
         strataLayer = QgsMapLayerRegistry.instance().mapLayer( self.mStrataLayerComboBox.itemData( self.mStrataLayerComboBox.currentIndex() ) )
         if strataLayer is None:
             return
@@ -259,6 +263,7 @@ class SurveyInitDialog( QDialog,  Ui_SurveyInitDialogBase ):
                 self.mMinimumDistanceAttributeComboBox.setCurrentIndex( self.mMinimumDistanceAttributeComboBox.findData( fieldIndex ) )
 
     def createStrataNSamplePointsAttribute( self ):
+        return #disable until there is a replacement for the old dialog
         strataLayer = QgsMapLayerRegistry.instance().mapLayer( self.mStrataLayerComboBox.itemData( self.mStrataLayerComboBox.currentIndex() ) )
         if strataLayer is None:
             return
@@ -282,6 +287,7 @@ class SurveyInitDialog( QDialog,  Ui_SurveyInitDialogBase ):
 
 
     def createStrataIdAttribute( self ):
+        return #disable until there is a replacement for the old dialog
         strataLayer = QgsMapLayerRegistry.instance().mapLayer( self.mStrataLayerComboBox.itemData( self.mStrataLayerComboBox.currentIndex() ) )
         if strataLayer is None:
             return
@@ -305,6 +311,7 @@ class SurveyInitDialog( QDialog,  Ui_SurveyInitDialogBase ):
 
 
     def createBaselineStrataAttribute( self ):
+        return #disable until there is a replacement for the old dialog
         baselineLayer  = QgsMapLayerRegistry.instance().mapLayer( self.mSurveyBaselineLayerComboBox.itemData( self.mSurveyBaselineLayerComboBox.currentIndex() ) )
         if not baselineLayer:
             return
