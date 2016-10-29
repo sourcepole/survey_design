@@ -5,6 +5,7 @@ from qgis.gui import *
 from qgis.analysis import *
 from surveydigitizetool import SurveyDigitizeTool
 from ui_surveyinitdialogbase import Ui_SurveyInitDialogBase
+from newvectorlayerdialog import NewVectorLayerDialog
 
 class SurveyInitDialog( QDialog,  Ui_SurveyInitDialogBase ):
 
@@ -192,50 +193,41 @@ class SurveyInitDialog( QDialog,  Ui_SurveyInitDialogBase ):
                     self.mStrataIdAttributeComboBox.addItem( field.name() )
 
     def createNewStrataLayer( self ):
-        return #disable until there is a replacement for the old dialog
-        attributeList = []
-        #samples per polygon
-        nPointsAttribute = QgsNewVectorLayerDialog.AttributeEntry()
-        nPointsAttribute.name = 'nPoints'
-        nPointsAttribute.type = 'Integer'
-        nPointsAttribute.width = 10
-        nPointsAttribute.precision = 0
-        attributeList.append( nPointsAttribute )
-        #min distance between samples
-        minDistAttribute = QgsNewVectorLayerDialog.AttributeEntry()
-        minDistAttribute.name = 'minDist'
-        minDistAttribute.type = 'Real'
-        minDistAttribute.width = 14
-        minDistAttribute.precision = 6
-        attributeList.append( minDistAttribute )
-
-        filename = QgsNewVectorLayerDialog.runAndCreateLayer( None, 'UTF-8', QGis.Polygon, attributeList )
-        if filename:
-            vlayer = self.iface.addVectorLayer( filename,  QFileInfo( filename ).baseName(),  'ogr')
+        vlDialog = NewVectorLayerDialog( None,  self.iface )
+        vlDialog.addAttribute( 'nPoints',  'Integer',  10,  0 )
+        vlDialog.addAttribute( 'minDist',  "Real",  14,  6 )
+        if vlDialog.exec_() == QDialog.Accepted:
+            vectorFileWriter = QgsVectorFileWriter( vlDialog.saveFilePath(),  vlDialog.encoding(),  vlDialog.fields(),  QGis.WKBPolygon,  vlDialog.crs(),  "ESRI Shapefile")
+            if( vectorFileWriter.hasError() ):
+                print ("Error")
+            del vectorFileWriter
+        vlayer = self.iface.addVectorLayer( vlDialog.saveFilePath(),  "Strata",  'ogr')
+        if not vlayer is None:
             self.fillLayerComboBox( self.mStrataLayerComboBox,  QGis.Polygon,  False )
             self.mStrataLayerComboBox.setCurrentIndex( self.mStrataLayerComboBox.findData( vlayer.id() ) )
 
     def createNewSurveyAreaLayer( self ):
-        return #disable until there is a replacement for the old dialog
-        filename = QgsNewVectorLayerDialog.runAndCreateLayer( None, 'UTF-8', QGis.Polygon )
-        if filename:
-            vlayer = self.iface.addVectorLayer( filename,  QFileInfo( filename ).baseName(),  'ogr')
+        vlDialog = NewVectorLayerDialog( None,  self.iface )
+        if vlDialog.exec_() == QDialog.Accepted:
+            vectorFileWriter = QgsVectorFileWriter( vlDialog.saveFilePath(),  vlDialog.encoding(),  vlDialog.fields(),  QGis.WKBPolygon,  vlDialog.crs(),  "ESRI Shapefile")
+            if( vectorFileWriter.hasError() ):
+                print ("Error")
+            del vectorFileWriter
+        vlayer = self.iface.addVectorLayer( vlDialog.saveFilePath(),  "SurveyArea",  'ogr')
+        if not vlayer is None:
             self.fillLayerComboBox( self.mSurveyAreaLayerComboBox,  QGis.Polygon,  True )
-            self.mSurveyAreaLayerComboBox.setCurrentIndex( self.mSurveyAreaLayerComboBox.findData(  vlayer.id())  )
+            self.mSurveyAreaLayerComboBox.setCurrentIndex( self.mSurveyAreaLayerComboBox.findData( vlayer.id() ) )
 
     def createNewBaselineLayer( self ):
-        return #disable until there is a replacement for the old dialog
-        attributeList = []
-        #strata id
-        strataIdAttribute = QgsNewVectorLayerDialog.AttributeEntry()
-        strataIdAttribute.name = 'strata_id'
-        strataIdAttribute.type = 'Integer'
-        strataIdAttribute.width = 10
-        strataIdAttribute.precision = 0
-        attributeList.append( strataIdAttribute )
-        filename = QgsNewVectorLayerDialog.runAndCreateLayer( None, 'UTF-8', QGis.Line, attributeList )
-        if filename:
-            vlayer = self.iface.addVectorLayer( filename,  QFileInfo( filename ).baseName(),  'ogr')
+        vlDialog = NewVectorLayerDialog( None,  self.iface )
+        vlDialog.addAttribute( 'strata_id',  'Integer',  10,  0 )
+        if vlDialog.exec_() == QDialog.Accepted:
+            vectorFileWriter = QgsVectorFileWriter( vlDialog.saveFilePath(),  vlDialog.encoding(),  vlDialog.fields(),  QGis.WKBLineString,  vlDialog.crs(),  "ESRI Shapefile")
+            if( vectorFileWriter.hasError() ):
+                print ("Error")
+            del vectorFileWriter
+        vlayer = self.iface.addVectorLayer( vlDialog.saveFilePath(),  "Baseline",  'ogr')
+        if not vlayer is None:
             self.fillLayerComboBox( self.mSurveyBaselineLayerComboBox,  QGis.Line,  True )
             self.mSurveyBaselineLayerComboBox.setCurrentIndex( self.mSurveyBaselineLayerComboBox.findData( vlayer.id() ) )
 
