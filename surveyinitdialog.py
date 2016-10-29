@@ -6,6 +6,7 @@ from qgis.analysis import *
 from surveydigitizetool import SurveyDigitizeTool
 from ui_surveyinitdialogbase import Ui_SurveyInitDialogBase
 from newvectorlayerdialog import NewVectorLayerDialog
+from addattrdialog import AddAttrDialog
 
 class SurveyInitDialog( QDialog,  Ui_SurveyInitDialogBase ):
 
@@ -232,15 +233,14 @@ class SurveyInitDialog( QDialog,  Ui_SurveyInitDialogBase ):
             self.mSurveyBaselineLayerComboBox.setCurrentIndex( self.mSurveyBaselineLayerComboBox.findData( vlayer.id() ) )
 
     def createStrataMinDistAttribute( self ):
-        return #disable until there is a replacement for the old dialog
         strataLayer = QgsMapLayerRegistry.instance().mapLayer( self.mStrataLayerComboBox.itemData( self.mStrataLayerComboBox.currentIndex() ) )
         if strataLayer is None:
             return
 
-        d = QgsAddAttrDialog( strataLayer )
-        d.setType( 1 )
+        d =AddAttrDialog( self )
+        d.setType( 'Real' )
         d.setFieldName( 'min_dist' )
-        d.setWidth( 14 )
+        d.setLength( 14 )
         d.setPrecision( 6 )
         if d.exec_() == QDialog.Accepted:
             fieldList = []
@@ -249,22 +249,18 @@ class SurveyInitDialog( QDialog,  Ui_SurveyInitDialogBase ):
             strataLayer.dataProvider().addAttributes( fieldList )
             strataLayer.updateFields()
             self.setMinimumDistanceAttributes( self. mStrataLayerComboBox.currentIndex() )
-            #try to set new attribute as current item
-            fieldIndex = strataLayer.dataProvider().fieldNameIndex( newField.name() )
-            if fieldIndex != -1:
-                self.mMinimumDistanceAttributeComboBox.setCurrentIndex( self.mMinimumDistanceAttributeComboBox.findData( fieldIndex ) )
+            self.mMinimumDistanceAttributeComboBox.setCurrentIndex(  self.mMinimumDistanceAttributeComboBox.findText( newField.name() ) )
 
     def createStrataNSamplePointsAttribute( self ):
-        return #disable until there is a replacement for the old dialog
         strataLayer = QgsMapLayerRegistry.instance().mapLayer( self.mStrataLayerComboBox.itemData( self.mStrataLayerComboBox.currentIndex() ) )
         if strataLayer is None:
             return
-
-        d = QgsAddAttrDialog( strataLayer )
-        d.setType( 0 )
+            
+        d = AddAttrDialog( self )
         d.setFieldName( 'n_points' )
-        d.setWidth( 10 )
+        d.setLength( 10 )
         d.setPrecision( 0 )
+        d.setType( 'Integer' )
         if d.exec_() == QDialog.Accepted:
             fieldList = []
             newField = d.field()
@@ -272,22 +268,17 @@ class SurveyInitDialog( QDialog,  Ui_SurveyInitDialogBase ):
             strataLayer.dataProvider().addAttributes( fieldList )
             strataLayer.updateFields()
             self.setNSamplePointsAttributes( self. mStrataLayerComboBox.currentIndex() )
-            #try to set new attribute as current item
-            fieldIndex = strataLayer.dataProvider().fieldNameIndex( newField.name() )
-            if fieldIndex != -1:
-                self.mNSamplePointsComboBox.setCurrentIndex( self.mNSamplePointsComboBox.findData( fieldIndex ) )
-
-
+            self.mNSamplePointsComboBox.setCurrentIndex( self.mNSamplePointsComboBox.findText( newField.name() ) )
+            
     def createStrataIdAttribute( self ):
-        return #disable until there is a replacement for the old dialog
         strataLayer = QgsMapLayerRegistry.instance().mapLayer( self.mStrataLayerComboBox.itemData( self.mStrataLayerComboBox.currentIndex() ) )
         if strataLayer is None:
             return
 
-        d = QgsAddAttrDialog( strataLayer )
-        d.setType( 0 )
+        d = AddAttrDialog( self )
+        d.setType( 'Integer' )
         d.setFieldName( 'strata_id' )
-        d.setWidth( 10 )
+        d.setLength( 10 )
         d.setPrecision( 0 )
         if d.exec_() == QDialog.Accepted:
             fieldList = []
@@ -296,22 +287,17 @@ class SurveyInitDialog( QDialog,  Ui_SurveyInitDialogBase ):
             strataLayer.dataProvider().addAttributes( fieldList )
             strataLayer.updateFields()
             self.setStrataIdAttributes( self. mStrataLayerComboBox.currentIndex() )
-            #try to set new attribute as current item
-            fieldIndex = strataLayer.dataProvider().fieldNameIndex( newField.name() )
-            if fieldIndex != -1:
-                self.mStrataIdAttributeComboBox.setCurrentIndex( self.mStrataIdAttributeComboBox.findData( fieldIndex ) )
-
+            self.mStrataIdAttributeComboBox.setCurrentIndex(  self.mStrataIdAttributeComboBox.findText( newField.name() ) )
 
     def createBaselineStrataAttribute( self ):
-        return #disable until there is a replacement for the old dialog
         baselineLayer  = QgsMapLayerRegistry.instance().mapLayer( self.mSurveyBaselineLayerComboBox.itemData( self.mSurveyBaselineLayerComboBox.currentIndex() ) )
         if not baselineLayer:
             return
 
-        d = QgsAddAttrDialog( baselineLayer )
-        d.setType( 0 )
+        d = AddAttrDialog( self )
+        d.setType( 'Integer' )
         d.setFieldName( 'strata_id' )
-        d.setWidth( 10 )
+        d.setLength( 10 )
         d.setPrecision( 0 )
         if d.exec_() == QDialog.Accepted:
             fieldList = []
@@ -320,12 +306,8 @@ class SurveyInitDialog( QDialog,  Ui_SurveyInitDialogBase ):
             baselineLayer.dataProvider().addAttributes( fieldList )
             baselineLayer.updateFields()
             self.setBaselineStrataIdAttributes( self.mSurveyBaselineLayerComboBox.currentIndex() )
-            #try to set new attribute as current item
-            fieldIndex = baselineLayer.dataProvider().fieldNameIndex( newField.name() )
-            if fieldIndex != -1:
-                self.mStratumIdComboBox.setCurrentIndex( self.mStratumIdComboBox.findData( fieldIndex ) )
-
-
+            self.mStratumIdComboBox.setCurrentIndex( self.mStratumIdComboBox.findText( newField.name() )  )
+           
     def writeToProject( self ):
         #store the settings to the properties section of the project file
         QgsProject.instance().writeEntry( 'Survey', 'SurveyAreaLayer', self.surveyAreaLayer() )
