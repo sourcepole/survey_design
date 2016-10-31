@@ -1,8 +1,9 @@
 [general]
 name=Survey design plugin
 description=A plugin to design biomass surveys along coast lines. The survey design dialog can be opened under Survey -> Survey design. Developed for NIWA, New Zealand
+about=A plugin to design biomass surveys along coast lines. The survey design dialog can be opened under Survey -> Survey design. Developed for NIWA, New Zealand
 category=Vector
-version=0.3
+version=0.4
 qgisMinimumVersion=2.16
 tracker=https://github.com/sourcepole/survey_design/issues
 repository=https://github.com/sourcepole/survey_design
