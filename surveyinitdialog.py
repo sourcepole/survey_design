@@ -166,6 +166,9 @@ class SurveyInitDialog( QDialog,  Ui_SurveyInitDialogBase ):
                 fieldList = layer.pendingFields().toList()
                 for field in fieldList:
                     self.mMinimumDistanceAttributeComboBox.addItem( field.name() )
+                index = self.mMinimumDistanceAttributeComboBox.findText( "minDist" )
+                if index >= 0:
+                    self.mMinimumDistanceAttributeComboBox.setCurrentIndex( index )
 
     def setNSamplePointsAttributes( self, index ):
         self.mNSamplePointsComboBox.clear()
@@ -179,6 +182,9 @@ class SurveyInitDialog( QDialog,  Ui_SurveyInitDialogBase ):
                 fieldList = layer.pendingFields().toList()
                 for field in fieldList:
                     self.mNSamplePointsComboBox.addItem( field.name() )
+                index = self.mNSamplePointsComboBox.findText( "nPoints" )
+                if index >= 0:
+                    self.mNSamplePointsComboBox.setCurrentIndex( index )
 
     def setStrataIdAttributes( self, index ):
         self.mStrataIdAttributeComboBox.clear()
@@ -192,9 +198,13 @@ class SurveyInitDialog( QDialog,  Ui_SurveyInitDialogBase ):
                 fieldList = layer.pendingFields().toList()
                 for field in fieldList:
                     self.mStrataIdAttributeComboBox.addItem( field.name() )
+                index = self.mStrataIdAttributeComboBox.findText( "strataId" )
+                if index >= 0:
+                    self.mStrataIdAttributeComboBox.setCurrentIndex( index )
 
     def createNewStrataLayer( self ):
         vlDialog = NewVectorLayerDialog( None,  self.iface )
+        vlDialog.addAttribute('strataId',  'Integer', 10,  0 )
         vlDialog.addAttribute( 'nPoints',  'Integer',  10,  0 )
         vlDialog.addAttribute( 'minDist',  "Real",  14,  6 )
         if vlDialog.exec_() == QDialog.Accepted:
@@ -221,7 +231,7 @@ class SurveyInitDialog( QDialog,  Ui_SurveyInitDialogBase ):
 
     def createNewBaselineLayer( self ):
         vlDialog = NewVectorLayerDialog( None,  self.iface )
-        vlDialog.addAttribute( 'strata_id',  'Integer',  10,  0 )
+        vlDialog.addAttribute( 'strataId',  'Integer',  10,  0 )
         if vlDialog.exec_() == QDialog.Accepted:
             vectorFileWriter = QgsVectorFileWriter( vlDialog.saveFilePath(),  vlDialog.encoding(),  vlDialog.fields(),  QGis.WKBLineString,  vlDialog.crs(),  "ESRI Shapefile")
             if( vectorFileWriter.hasError() ):
@@ -239,7 +249,7 @@ class SurveyInitDialog( QDialog,  Ui_SurveyInitDialogBase ):
 
         d =AddAttrDialog( self )
         d.setType( 'Real' )
-        d.setFieldName( 'min_dist' )
+        d.setFieldName( 'minDist' )
         d.setLength( 14 )
         d.setPrecision( 6 )
         if d.exec_() == QDialog.Accepted:
@@ -257,7 +267,7 @@ class SurveyInitDialog( QDialog,  Ui_SurveyInitDialogBase ):
             return
             
         d = AddAttrDialog( self )
-        d.setFieldName( 'n_points' )
+        d.setFieldName( 'nPoints' )
         d.setLength( 10 )
         d.setPrecision( 0 )
         d.setType( 'Integer' )
@@ -277,7 +287,7 @@ class SurveyInitDialog( QDialog,  Ui_SurveyInitDialogBase ):
 
         d = AddAttrDialog( self )
         d.setType( 'Integer' )
-        d.setFieldName( 'strata_id' )
+        d.setFieldName( 'strataId' )
         d.setLength( 10 )
         d.setPrecision( 0 )
         if d.exec_() == QDialog.Accepted:
@@ -296,7 +306,7 @@ class SurveyInitDialog( QDialog,  Ui_SurveyInitDialogBase ):
 
         d = AddAttrDialog( self )
         d.setType( 'Integer' )
-        d.setFieldName( 'strata_id' )
+        d.setFieldName( 'strataId' )
         d.setLength( 10 )
         d.setPrecision( 0 )
         if d.exec_() == QDialog.Accepted:
@@ -387,7 +397,7 @@ class SurveyInitDialog( QDialog,  Ui_SurveyInitDialogBase ):
         strataNSamplePoints = QgsProject.instance().readEntry( 'Survey', 'StrataNSamplePoints' )[0]
 
         if not strataLayer or strataNSamplePoints < 0:
-            print 'Error'
+            print ('Error')
             return
 
         print 'no Error'
