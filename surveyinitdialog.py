@@ -150,6 +150,9 @@ class SurveyInitDialog( QDialog,  Ui_SurveyInitDialogBase ):
                 fieldList = layer.pendingFields().toList()
                 for field in fieldList:
                     self.mStratumIdComboBox.addItem( field.name() )
+                index = self.mStratumIdComboBox.findText( "strataId" )
+                if index >= 0:
+                    self.mStratumIdComboBox.setCurrentIndex( index )
 
     def setMinimumDistanceAttributes( self, index ):
         self.mMinimumDistanceAttributeComboBox.clear()
