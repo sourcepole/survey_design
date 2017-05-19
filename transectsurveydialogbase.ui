@@ -6,46 +6,113 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>574</width>
-    <height>373</height>
+    <width>646</width>
+    <height>479</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Transect Survey</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout_2">
+  <layout class="QGridLayout" name="gridLayout_3">
    <item row="0" column="0" colspan="2">
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QLabel" name="mSurveyAreaLabel">
+       <property name="text">
+        <string>Survey area layer</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="mSurveyAreaLayerComboBox"/>
+     </item>
+    </layout>
+   </item>
+   <item row="4" column="0">
+    <spacer name="horizontalSpacer">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>499</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="4" column="1">
+    <widget class="QPushButton" name="mCreateSampleButton">
+     <property name="text">
+      <string>Create sample sites</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0" colspan="2">
+    <widget class="QGroupBox" name="mBaselineGroupBox">
+     <property name="title">
+      <string>Baseline</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_2">
+      <item row="2" column="1">
+       <widget class="QDoubleSpinBox" name="mBaselineSimplificationToleranceSpinBox">
+        <property name="minimum">
+         <double>-1.000000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>999999999.000000000000000</double>
+        </property>
+        <property name="value">
+         <double>-1.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="mSurveyBaselineLayerComboBox"/>
+      </item>
+      <item row="1" column="1">
+       <widget class="QDoubleSpinBox" name="mBaselineBufferDistanceSpinBox">
+        <property name="minimum">
+         <double>-1.000000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>999999999.000000000000000</double>
+        </property>
+        <property name="value">
+         <double>-1.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="mBaselineLayerLabel">
+        <property name="text">
+         <string>Survey baseline layer</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="mBaselineSimplificationToleranceLabel">
+        <property name="text">
+         <string>Simplification tolerance</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="mBaselineBufferDistanceLabel">
+        <property name="text">
+         <string>Buffer distance</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="2" column="0" colspan="2">
     <widget class="QGroupBox" name="mStrataGroupBox">
      <property name="title">
       <string>Strata</string>
      </property>
      <layout class="QGridLayout" name="gridLayout">
-      <item row="1" column="1">
-       <widget class="QComboBox" name="mMinimumDistanceAttributeComboBox"/>
-      </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="mNSamplePointsAttribute">
-        <property name="text">
-         <string>N sample points attribute</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="0">
-       <widget class="QLabel" name="mStrataIdAttributeLabel">
-        <property name="text">
-         <string>ID attribute</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1">
-       <widget class="QComboBox" name="mNSamplePointsComboBox"/>
-      </item>
-      <item row="0" column="1">
-       <widget class="QComboBox" name="mStrataLayerComboBox"/>
-      </item>
-      <item row="4" column="1">
-       <widget class="QComboBox" name="mStrataIdAttributeComboBox"/>
-      </item>
       <item row="1" column="0">
        <widget class="QLabel" name="mMinDistanceLabel">
         <property name="text">
@@ -53,15 +120,8 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="mMinDistanceUnitsLabel">
-        <property name="text">
-         <string>Distance units</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QComboBox" name="mMinDistanceUnitsComboBox"/>
+      <item row="1" column="1">
+       <widget class="QComboBox" name="mMinimumDistanceAttributeComboBox"/>
       </item>
       <item row="0" column="0">
        <widget class="QLabel" name="mStrataLayerLabel">
@@ -70,30 +130,51 @@
         </property>
        </widget>
       </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="mStrataLayerComboBox"/>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="mNSamplePointsAttribute">
+        <property name="text">
+         <string>N sample points attribute</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QComboBox" name="mStrataIdAttributeComboBox"/>
+      </item>
+      <item row="2" column="1">
+       <widget class="QComboBox" name="mNSamplePointsComboBox"/>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="mStrataIdAttributeLabel">
+        <property name="text">
+         <string>ID attribute</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
-   <item row="1" column="0">
-    <spacer name="horizontalSpacer">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>427</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
+   <item row="3" column="0" colspan="2">
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QLabel" name="mMinimumTransectLengthLabel">
+       <property name="text">
+        <string>Minimum transect length</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QDoubleSpinBox" name="mMinimumTransectLengthSpinBox">
+       <property name="maximum">
+        <double>99999999.000000000000000</double>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
-   <item row="1" column="1">
-    <widget class="QPushButton" name="mCreateSampleButton">
-     <property name="text">
-      <string>Create sample sites</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="0" colspan="2">
+   <item row="5" column="0" colspan="2">
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
