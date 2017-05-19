@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>464</width>
-    <height>569</height>
+    <height>766</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,6 +16,9 @@
   <layout class="QGridLayout" name="gridLayout_5">
    <item row="0" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <property name="sizeConstraint">
+      <enum>QLayout::SetDefaultConstraint</enum>
+     </property>
      <item>
       <widget class="QLabel" name="mSurveyAreaLayerLabel">
        <property name="text">
@@ -26,17 +29,6 @@
      <item>
       <widget class="QComboBox" name="mSurveyAreaLayerComboBox"/>
      </item>
-     <item>
-      <widget class="QToolButton" name="mNewSurveyLayerButton">
-       <property name="text">
-        <string>...</string>
-       </property>
-       <property name="icon">
-        <iconset resource="resources.qrc">
-         <normaloff>:/plugins/survey_design/mActionNewVectorLayer.png</normaloff>:/plugins/survey_design/mActionNewVectorLayer.png</iconset>
-       </property>
-      </widget>
-     </item>
     </layout>
    </item>
    <item row="1" column="0">
@@ -45,8 +37,25 @@
       <string>Baseline</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_2">
+      <item row="0" column="1">
+       <widget class="QComboBox" name="mSurveyBaselineLayerComboBox"/>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="mBaselineSimplificationToleranceLabel">
+        <property name="text">
+         <string>Simplification tolerance</string>
+        </property>
+       </widget>
+      </item>
       <item row="1" column="1">
        <widget class="QComboBox" name="mStratumIdComboBox"/>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="mStratumIdLabel">
+        <property name="text">
+         <string>Stratum id field</string>
+        </property>
+       </widget>
       </item>
       <item row="0" column="0">
        <widget class="QLabel" name="mBaselineLayerLabel">
@@ -54,27 +63,6 @@
          <string>Survey baseline layer</string>
         </property>
        </widget>
-      </item>
-      <item row="0" column="2">
-       <widget class="QToolButton" name="mNewBaselineLayerButton">
-        <property name="text">
-         <string>...</string>
-        </property>
-        <property name="icon">
-         <iconset resource="resources.qrc">
-          <normaloff>:/plugins/survey_design/mActionNewVectorLayer.png</normaloff>:/plugins/survey_design/mActionNewVectorLayer.png</iconset>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="mBaselineBufferDistanceLabel">
-        <property name="text">
-         <string>Buffer distance</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QComboBox" name="mSurveyBaselineLayerComboBox"/>
       </item>
       <item row="2" column="1">
        <widget class="QDoubleSpinBox" name="mBaselineBufferDistanceSpinBox">
@@ -89,28 +77,10 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="2">
-       <widget class="QToolButton" name="mStratumIdToolButton">
+      <item row="2" column="0">
+       <widget class="QLabel" name="mBaselineBufferDistanceLabel">
         <property name="text">
-         <string>...</string>
-        </property>
-        <property name="icon">
-         <iconset resource="resources.qrc">
-          <normaloff>:/plugins/survey_design/mActionNewAttribute.png</normaloff>:/plugins/survey_design/mActionNewAttribute.png</iconset>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="mStratumIdLabel">
-        <property name="text">
-         <string>Stratum id field</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="mBaselineSimplificationToleranceLabel">
-        <property name="text">
-         <string>Simplification tolerance</string>
+         <string>Buffer distance</string>
         </property>
        </widget>
       </item>
@@ -136,74 +106,20 @@
       <string>Survey design</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_4">
-      <item row="0" column="0" colspan="2">
-       <layout class="QGridLayout" name="gridLayout_3">
-        <item row="2" column="0">
-         <widget class="QLabel" name="mAddBaselineLabel">
-          <property name="text">
-           <string>Add baseline</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="QToolButton" name="mAddBaselineToolButton">
-          <property name="text">
-           <string>...</string>
-          </property>
-          <property name="icon">
-           <iconset resource="resources.qrc">
-            <normaloff>:/plugins/survey_design/mActionToggleEditing.png</normaloff>:/plugins/survey_design/mActionToggleEditing.png</iconset>
-          </property>
-          <property name="checkable">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="mAddStratumLabel">
-          <property name="text">
-           <string>Add stratum</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QToolButton" name="mAddStratumToolButton">
-          <property name="text">
-           <string>...</string>
-          </property>
-          <property name="icon">
-           <iconset resource="resources.qrc">
-            <normaloff>:/plugins/survey_design/mActionToggleEditing.png</normaloff>:/plugins/survey_design/mActionToggleEditing.png</iconset>
-          </property>
-          <property name="checkable">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="0">
-         <widget class="QLabel" name="mAddSurveyAreaLabel">
-          <property name="text">
-           <string>Add survey area</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QToolButton" name="mAddSurveyAreaToolButton">
-          <property name="text">
-           <string>...</string>
-          </property>
-          <property name="icon">
-           <iconset resource="resources.qrc">
-            <normaloff>:/plugins/survey_design/mActionToggleEditing.png</normaloff>:/plugins/survey_design/mActionToggleEditing.png</iconset>
-          </property>
-          <property name="checkable">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-       </layout>
+      <item row="3" column="0">
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>240</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
       </item>
-      <item row="1" column="0" colspan="2">
+      <item row="0" column="0" colspan="2">
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
          <widget class="QRadioButton" name="mPointSurveyRadioButton">
@@ -221,20 +137,14 @@
         </item>
        </layout>
       </item>
-      <item row="4" column="0">
-       <spacer name="horizontalSpacer">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+      <item row="2" column="0">
+       <widget class="QLabel" name="mMinimumTransectLengthLabel">
+        <property name="text">
+         <string>Minimum transect length</string>
         </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>240</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
+       </widget>
       </item>
-      <item row="2" column="0" colspan="2">
+      <item row="1" column="0" colspan="2">
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
          <widget class="QCheckBox" name="mShareBaselineCheckBox">
@@ -248,24 +158,17 @@
         </item>
        </layout>
       </item>
-      <item row="4" column="1">
-       <widget class="QPushButton" name="mCreateSampleButton">
-        <property name="text">
-         <string>Create sample sites</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="mMinimumTransectLengthLabel">
-        <property name="text">
-         <string>Minimum transect length</string>
+      <item row="2" column="1">
+       <widget class="QDoubleSpinBox" name="mMinimumTransectLengthSpinBox">
+        <property name="maximum">
+         <double>99999999.000000000000000</double>
         </property>
        </widget>
       </item>
       <item row="3" column="1">
-       <widget class="QDoubleSpinBox" name="mMinimumTransectLengthSpinBox">
-        <property name="maximum">
-         <double>99999999.000000000000000</double>
+       <widget class="QPushButton" name="mCreateSampleButton">
+        <property name="text">
+         <string>Create sample sites</string>
         </property>
        </widget>
       </item>
@@ -278,8 +181,15 @@
       <string>Strata</string>
      </property>
      <layout class="QGridLayout" name="gridLayout">
-      <item row="4" column="1">
-       <widget class="QComboBox" name="mStrataIdAttributeComboBox"/>
+      <item row="1" column="1">
+       <widget class="QComboBox" name="mMinimumDistanceAttributeComboBox"/>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="mNSamplePointsAttribute">
+        <property name="text">
+         <string>N sample points attribute</string>
+        </property>
+       </widget>
       </item>
       <item row="4" column="0">
        <widget class="QLabel" name="mStrataIdAttributeLabel">
@@ -291,6 +201,12 @@
       <item row="3" column="1">
        <widget class="QComboBox" name="mNSamplePointsComboBox"/>
       </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="mStrataLayerComboBox"/>
+      </item>
+      <item row="4" column="1">
+       <widget class="QComboBox" name="mStrataIdAttributeComboBox"/>
+      </item>
       <item row="1" column="0">
        <widget class="QLabel" name="mMinDistanceLabel">
         <property name="text">
@@ -298,77 +214,20 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
-       <widget class="QComboBox" name="mStrataLayerComboBox"/>
-      </item>
-      <item row="1" column="1">
-       <widget class="QComboBox" name="mMinimumDistanceAttributeComboBox"/>
-      </item>
-      <item row="0" column="2">
-       <widget class="QToolButton" name="mNewStrataLayerButton">
+      <item row="2" column="0">
+       <widget class="QLabel" name="mMinDistanceUnitsLabel">
         <property name="text">
-         <string>...</string>
-        </property>
-        <property name="icon">
-         <iconset resource="resources.qrc">
-          <normaloff>:/plugins/survey_design/mActionNewVectorLayer.png</normaloff>:/plugins/survey_design/mActionNewVectorLayer.png</iconset>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="mNSamplePointsAttribute">
-        <property name="text">
-         <string>N sample points attribute</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="mStrataLayerLabel">
-        <property name="text">
-         <string>Strata layer</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="2">
-       <widget class="QToolButton" name="mStrataMinDistToolButton">
-        <property name="text">
-         <string>...</string>
-        </property>
-        <property name="icon">
-         <iconset resource="resources.qrc">
-          <normaloff>:/plugins/survey_design/mActionNewAttribute.png</normaloff>:/plugins/survey_design/mActionNewAttribute.png</iconset>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="2">
-       <widget class="QToolButton" name="mStrataNSamplePointsToolButton">
-        <property name="text">
-         <string>...</string>
-        </property>
-        <property name="icon">
-         <iconset resource="resources.qrc">
-          <normaloff>:/plugins/survey_design/mActionNewAttribute.png</normaloff>:/plugins/survey_design/mActionNewAttribute.png</iconset>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="2">
-       <widget class="QToolButton" name="mStrataIdAttributeToolButton">
-        <property name="text">
-         <string>...</string>
-        </property>
-        <property name="icon">
-         <iconset resource="resources.qrc">
-          <normaloff>:/plugins/survey_design/mActionNewAttribute.png</normaloff>:/plugins/survey_design/mActionNewAttribute.png</iconset>
+         <string>Distance units</string>
         </property>
        </widget>
       </item>
       <item row="2" column="1">
        <widget class="QComboBox" name="mMinDistanceUnitsComboBox"/>
       </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="mMinDistanceUnitsLabel">
+      <item row="0" column="0">
+       <widget class="QLabel" name="mStrataLayerLabel">
         <property name="text">
-         <string>Distance units</string>
+         <string>Strata layer</string>
         </property>
        </widget>
       </item>
@@ -387,9 +246,7 @@
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="resources.qrc"/>
- </resources>
+ <resources/>
  <connections>
   <connection>
    <sender>buttonBox</sender>

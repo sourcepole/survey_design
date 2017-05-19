@@ -3,10 +3,7 @@ from PyQt4.QtGui import *
 from qgis.core import *
 from qgis.gui import *
 from qgis.analysis import *
-from surveydigitizetool import SurveyDigitizeTool
 from ui_surveyinitdialogbase import Ui_SurveyInitDialogBase
-from newvectorlayerdialog import NewVectorLayerDialog
-from addattrdialog import AddAttrDialog
 
 class SurveyInitDialog( QDialog,  Ui_SurveyInitDialogBase ):
 
@@ -41,16 +38,6 @@ class SurveyInitDialog( QDialog,  Ui_SurveyInitDialogBase ):
         QObject.connect( self.mStrataLayerComboBox, SIGNAL('currentIndexChanged( int )'), self.setMinimumDistanceAttributes )
         QObject.connect( self.mStrataLayerComboBox, SIGNAL('currentIndexChanged( int )'), self.setNSamplePointsAttributes )
         QObject.connect( self.mStrataLayerComboBox, SIGNAL('currentIndexChanged( int )'), self.setStrataIdAttributes )
-        QObject.connect( self.mStratumIdToolButton, SIGNAL('currentIndexChanged( int )'), self.createBaselineStrataAttribute )
-
-        #connections for buttons
-        QObject.connect( self.mNewStrataLayerButton, SIGNAL('clicked()'), self.createNewStrataLayer )
-        QObject.connect( self.mNewSurveyLayerButton, SIGNAL('clicked()'), self.createNewSurveyAreaLayer )
-        QObject.connect( self.mNewBaselineLayerButton, SIGNAL('clicked()'), self.createNewBaselineLayer )
-        QObject.connect( self.mStrataMinDistToolButton, SIGNAL('clicked()'), self.createStrataMinDistAttribute )
-        QObject.connect( self.mStrataNSamplePointsToolButton, SIGNAL('clicked()') , self.createStrataNSamplePointsAttribute )
-        QObject.connect(self.mStrataIdAttributeToolButton, SIGNAL('clicked()'), self.createStrataIdAttribute )
-        QObject.connect(self.mStratumIdToolButton, SIGNAL('clicked()'), self.createBaselineStrataAttribute )
 
         #slots for combo boxes (write to project)
         self.blockSignals( True )
@@ -204,122 +191,6 @@ class SurveyInitDialog( QDialog,  Ui_SurveyInitDialogBase ):
                 index = self.mStrataIdAttributeComboBox.findText( "strataId" )
                 if index >= 0:
                     self.mStrataIdAttributeComboBox.setCurrentIndex( index )
-
-    def createNewStrataLayer( self ):
-        vlDialog = NewVectorLayerDialog( None,  self.iface )
-        vlDialog.addAttribute('strataId',  'Integer', 10,  0 )
-        vlDialog.addAttribute( 'nPoints',  'Integer',  10,  0 )
-        vlDialog.addAttribute( 'minDist',  "Real",  14,  6 )
-        if vlDialog.exec_() == QDialog.Accepted:
-            vectorFileWriter = QgsVectorFileWriter( vlDialog.saveFilePath(),  vlDialog.encoding(),  vlDialog.fields(),  QGis.WKBPolygon,  vlDialog.crs(),  "ESRI Shapefile")
-            if( vectorFileWriter.hasError() ):
-                print ("Error")
-            del vectorFileWriter
-        vlayer = self.iface.addVectorLayer( vlDialog.saveFilePath(),  "Strata",  'ogr')
-        if not vlayer is None:
-            self.fillLayerComboBox( self.mStrataLayerComboBox,  QGis.Polygon,  False )
-            self.mStrataLayerComboBox.setCurrentIndex( self.mStrataLayerComboBox.findData( vlayer.id() ) )
-
-    def createNewSurveyAreaLayer( self ):
-        vlDialog = NewVectorLayerDialog( None,  self.iface )
-        if vlDialog.exec_() == QDialog.Accepted:
-            vectorFileWriter = QgsVectorFileWriter( vlDialog.saveFilePath(),  vlDialog.encoding(),  vlDialog.fields(),  QGis.WKBPolygon,  vlDialog.crs(),  "ESRI Shapefile")
-            if( vectorFileWriter.hasError() ):
-                print ("Error")
-            del vectorFileWriter
-        vlayer = self.iface.addVectorLayer( vlDialog.saveFilePath(),  "SurveyArea",  'ogr')
-        if not vlayer is None:
-            self.fillLayerComboBox( self.mSurveyAreaLayerComboBox,  QGis.Polygon,  True )
-            self.mSurveyAreaLayerComboBox.setCurrentIndex( self.mSurveyAreaLayerComboBox.findData( vlayer.id() ) )
-
-    def createNewBaselineLayer( self ):
-        vlDialog = NewVectorLayerDialog( None,  self.iface )
-        vlDialog.addAttribute( 'strataId',  'Integer',  10,  0 )
-        if vlDialog.exec_() == QDialog.Accepted:
-            vectorFileWriter = QgsVectorFileWriter( vlDialog.saveFilePath(),  vlDialog.encoding(),  vlDialog.fields(),  QGis.WKBLineString,  vlDialog.crs(),  "ESRI Shapefile")
-            if( vectorFileWriter.hasError() ):
-                print ("Error")
-            del vectorFileWriter
-        vlayer = self.iface.addVectorLayer( vlDialog.saveFilePath(),  "Baseline",  'ogr')
-        if not vlayer is None:
-            self.fillLayerComboBox( self.mSurveyBaselineLayerComboBox,  QGis.Line,  True )
-            self.mSurveyBaselineLayerComboBox.setCurrentIndex( self.mSurveyBaselineLayerComboBox.findData( vlayer.id() ) )
-
-    def createStrataMinDistAttribute( self ):
-        strataLayer = QgsMapLayerRegistry.instance().mapLayer( self.mStrataLayerComboBox.itemData( self.mStrataLayerComboBox.currentIndex() ) )
-        if strataLayer is None:
-            return
-
-        d =AddAttrDialog( self )
-        d.setType( 'Real' )
-        d.setFieldName( 'minDist' )
-        d.setLength( 14 )
-        d.setPrecision( 6 )
-        if d.exec_() == QDialog.Accepted:
-            fieldList = []
-            newField = d.field()
-            fieldList.append( newField )
-            strataLayer.dataProvider().addAttributes( fieldList )
-            strataLayer.updateFields()
-            self.setMinimumDistanceAttributes( self. mStrataLayerComboBox.currentIndex() )
-            self.mMinimumDistanceAttributeComboBox.setCurrentIndex(  self.mMinimumDistanceAttributeComboBox.findText( newField.name() ) )
-
-    def createStrataNSamplePointsAttribute( self ):
-        strataLayer = QgsMapLayerRegistry.instance().mapLayer( self.mStrataLayerComboBox.itemData( self.mStrataLayerComboBox.currentIndex() ) )
-        if strataLayer is None:
-            return
-            
-        d = AddAttrDialog( self )
-        d.setFieldName( 'nPoints' )
-        d.setLength( 10 )
-        d.setPrecision( 0 )
-        d.setType( 'Integer' )
-        if d.exec_() == QDialog.Accepted:
-            fieldList = []
-            newField = d.field()
-            fieldList.append( newField )
-            strataLayer.dataProvider().addAttributes( fieldList )
-            strataLayer.updateFields()
-            self.setNSamplePointsAttributes( self. mStrataLayerComboBox.currentIndex() )
-            self.mNSamplePointsComboBox.setCurrentIndex( self.mNSamplePointsComboBox.findText( newField.name() ) )
-            
-    def createStrataIdAttribute( self ):
-        strataLayer = QgsMapLayerRegistry.instance().mapLayer( self.mStrataLayerComboBox.itemData( self.mStrataLayerComboBox.currentIndex() ) )
-        if strataLayer is None:
-            return
-
-        d = AddAttrDialog( self )
-        d.setType( 'Integer' )
-        d.setFieldName( 'strataId' )
-        d.setLength( 10 )
-        d.setPrecision( 0 )
-        if d.exec_() == QDialog.Accepted:
-            fieldList = []
-            newField = d.field()
-            fieldList.append( newField )
-            strataLayer.dataProvider().addAttributes( fieldList )
-            strataLayer.updateFields()
-            self.setStrataIdAttributes( self. mStrataLayerComboBox.currentIndex() )
-            self.mStrataIdAttributeComboBox.setCurrentIndex(  self.mStrataIdAttributeComboBox.findText( newField.name() ) )
-
-    def createBaselineStrataAttribute( self ):
-        baselineLayer  = QgsMapLayerRegistry.instance().mapLayer( self.mSurveyBaselineLayerComboBox.itemData( self.mSurveyBaselineLayerComboBox.currentIndex() ) )
-        if not baselineLayer:
-            return
-
-        d = AddAttrDialog( self )
-        d.setType( 'Integer' )
-        d.setFieldName( 'strataId' )
-        d.setLength( 10 )
-        d.setPrecision( 0 )
-        if d.exec_() == QDialog.Accepted:
-            fieldList = []
-            newField = d.field()
-            fieldList.append( newField )
-            baselineLayer.dataProvider().addAttributes( fieldList )
-            baselineLayer.updateFields()
-            self.setBaselineStrataIdAttributes( self.mSurveyBaselineLayerComboBox.currentIndex() )
-            self.mStratumIdComboBox.setCurrentIndex( self.mStratumIdComboBox.findText( newField.name() )  )
            
     def writeToProject( self ):
         #store the settings to the properties section of the project file
@@ -403,14 +274,14 @@ class SurveyInitDialog( QDialog,  Ui_SurveyInitDialogBase ):
             print ('Error')
             return
 
-        print 'no Error'
+        print ( 'no Error' )
         inputLayer = QgsMapLayerRegistry.instance().mapLayer( strataLayer )
 
         s = QSettings()
         saveDir = s.value( '/SurveyPlugin/SaveDir','')
 
         outputShape = QFileDialog.getSaveFileName( self, QCoreApplication.translate( 'SurveyDesignDialog', 'Select output shape file' ), saveDir, QCoreApplication.translate( 'SurveyDesignDialog', 'Shapefiles (*.shp)' ) )
-        print outputShape
+        print ( outputShape )
         if not outputShape:
             return
 
