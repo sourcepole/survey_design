@@ -6,6 +6,7 @@ from qgis.gui import *
 from ui_pointsurveydialogbase import Ui_PointSurveyDialogBase
 from surveyutils import fillLayerComboBox
 from surveyutils import fillAttributeComboBox
+from surveyutils import writePointShapeAsGPX
 
 class PointSurveyDialog( QDialog,  Ui_PointSurveyDialogBase ):
     def __init__( self,  parent,  iface ):
@@ -58,3 +59,7 @@ class PointSurveyDialog( QDialog,  Ui_PointSurveyDialogBase ):
 
         s.setValue( '/SurveyPlugin/SaveDir', QFileInfo( outputShape ).absolutePath() )
         self.iface.addVectorLayer( outputShape, 'sample', 'ogr' )
+        
+        gpxFileInfo = QFileInfo( outputShape )
+        gpxFileName = gpxFileInfo.path() + '/' + gpxFileInfo.baseName() + '.gpx'
+        writePointShapeAsGPX( outputShape, 'id',   gpxFileName )

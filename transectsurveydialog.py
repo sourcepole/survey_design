@@ -6,6 +6,7 @@ from qgis.gui import *
 from ui_transectsurveydialogbase import Ui_TransectSurveyDialogBase
 from surveyutils import fillLayerComboBox
 from surveyutils import fillAttributeComboBox
+from surveyutils import writePointShapeAsGPX
 
 class TransectSurveyDialog( QDialog,  Ui_TransectSurveyDialogBase ):
     def __init__(self,  parent,  iface ):
@@ -81,5 +82,10 @@ class TransectSurveyDialog( QDialog,  Ui_TransectSurveyDialogBase ):
         pd.show();
         QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
         transectSample.createSample( pd )
+        
+        gpxFileInfo = QFileInfo( outputPointShape )
+        gpxFileName = gpxFileInfo.path() + '/' + gpxFileInfo.baseName() + '.gpx'
+        writePointShapeAsGPX( outputPointShape, 'station_co',   gpxFileName )
+        
         QApplication.restoreOverrideCursor()
 
