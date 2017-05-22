@@ -7,6 +7,8 @@ from ui_transectsurveydialogbase import Ui_TransectSurveyDialogBase
 from surveyutils import fillLayerComboBox
 from surveyutils import fillAttributeComboBox
 from surveyutils import writePointShapeAsGPX
+from surveyutils import writeStratumCSV
+from surveyutils import writeStratumBoundaryCSV
 
 class TransectSurveyDialog( QDialog,  Ui_TransectSurveyDialogBase ):
     def __init__(self,  parent,  iface ):
@@ -22,6 +24,7 @@ class TransectSurveyDialog( QDialog,  Ui_TransectSurveyDialogBase ):
         
         QObject.connect( self.mStrataLayerComboBox,  SIGNAL('currentIndexChanged (int)'),  self.strataLayerComboBoxChanged )
         QObject.connect( self.mCreateSampleButton,  SIGNAL( 'clicked()' ),  self.createSample )
+        QObject.connect( self.mExportCsvButton,  SIGNAL( 'clicked()'),  self.exportCSV )
         
     def strataLayerComboBoxChanged( self ):
         comboIndex = self.mStrataLayerComboBox.currentIndex()
@@ -57,9 +60,7 @@ class TransectSurveyDialog( QDialog,  Ui_TransectSurveyDialogBase ):
             return
         
         #strata map layer
-        comboIndex = self.mStrataLayerComboBox.currentIndex()
-        strataLayerId = self.mStrataLayerComboBox.itemData( comboIndex )
-        strataMapLayer = QgsMapLayerRegistry.instance().mapLayer( strataLayerId )
+        strataMapLayer = self.stratumLayer()
         if strataMapLayer is None:
             return
 
@@ -88,4 +89,18 @@ class TransectSurveyDialog( QDialog,  Ui_TransectSurveyDialogBase ):
         writePointShapeAsGPX( outputPointShape, 'station_co',   gpxFileName )
         
         QApplication.restoreOverrideCursor()
+        
+    def exportCSV(self):
+        fileDialog = QFileDialog(  self,  QCoreApplication.translate( 'SurveyDesignDialog', 'Select output directory for csv files' )  )
+        fileDialog.setFileMode( QFileDialog.Directory )
+        fileDialog.setOption( QFileDialog.ShowDirsOnly )
+        if fileDialog.exec_() == QDialog.Accepted:
+            writeStratumCSV( fileDialog.selectedFiles()[0], self.stratumLayer(), self.mStrataIdAttributeComboBox.currentText(),  "test_survey" )
+            writeStratumBoundaryCSV( fileDialog.selectedFiles()[0], self.stratumLayer(), self.mStrataIdAttributeComboBox.currentText(),  "test_survey" )
+        
+    def stratumLayer(self):
+        comboIndex = self.mStrataLayerComboBox.currentIndex()
+        strataLayerId = self.mStrataLayerComboBox.itemData( comboIndex )
+        strataMapLayer = QgsMapLayerRegistry.instance().mapLayer( strataLayerId )
+        return strataMapLayer
 

@@ -2,6 +2,7 @@ from qgis.core import *
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from PyQt4.QtXml import *
+import csv
 
 def fillLayerComboBox( comboBox,  geometryType,  noneEntry ):
         comboBox.clear()
@@ -66,4 +67,45 @@ def writePointShapeAsGPX( shapePath,  nameAttribute,  outputFileName ):
     #save gpx document
     outStream = QTextStream( outputFile )
     gpxDoc.save( outStream,  2 )
+
+def writeStratumCSV( outputDirectory,  stratumLayer,  stratumIdAttribute,  surveyId ):
+    outputFilePath = outputDirectory + "/" + "Stratum.csv"
+    csvWriter = csv.writer( open( outputFilePath,  "wb" ) )
+    #write header
+    csvWriter.writerow( ["survey","stratum","area_m2","year","description"] )
+  
+    iter = stratumLayer.getFeatures()
+    for feature in iter:
+        geomArea = 0
+        geom = feature.geometry()
+        if not geom is None:
+            geomArea = geom.area()
+        stratumId = feature.attribute( stratumIdAttribute )
+        csvWriter.writerow( [surveyId,  stratumId,  geomArea,  QDate.currentDate().year(), ""] )
+        
+def writeStratumBoundaryCSV( outputDirectory,  stratumLayer,  stratumIdAttribute,  surveyId ):
+    if stratumLayer is None:
+        return
+
+    outputFilePath = outputDirectory + "/" + "StratumBoundaries.csv"
+    csvWriter = csv.writer( open( outputFilePath,  "wb" ) )
+    #write header
+    csvWriter.writerow( ["long","lat","stratum","survey"] )
+    
+    #all points have to be transformed to wgs84
+    coordTransform = QgsCoordinateTransform( stratumLayer.crs(),  QgsCoordinateReferenceSystem( 'EPSG:4326' ) )
+    
+    iter = stratumLayer.getFeatures()
+    for feature in iter:
+        stratumId = feature.attribute( stratumIdAttribute )
+        geom = feature.geometry()
+        geom.transform( coordTransform )
+        
+        if not geom is None:
+            featureCoords = geom.geometry().coordinateSequence()
+            for part in featureCoords:
+                for ring in part:
+                    for vertex in ring:
+                        csvWriter.writerow( [vertex.x(),  vertex.y(),  stratumId,  surveyId] )
+            pass
     

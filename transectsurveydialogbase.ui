@@ -14,7 +14,57 @@
    <string>Transect Survey</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_3">
-   <item row="2" column="0" colspan="2">
+   <item row="0" column="0" colspan="3">
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QLabel" name="mSurveyAreaLabel">
+       <property name="text">
+        <string>Survey area layer</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="mSurveyAreaLayerComboBox"/>
+     </item>
+    </layout>
+   </item>
+   <item row="3" column="2">
+    <widget class="QPushButton" name="mCreateSampleButton">
+     <property name="text">
+      <string>Create sample sites</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0" colspan="3">
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Close</set>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0" colspan="3">
+    <widget class="QGroupBox" name="mBaselineGroupBox">
+     <property name="title">
+      <string>Baseline</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_2">
+      <item row="0" column="1">
+       <widget class="QComboBox" name="mSurveyBaselineLayerComboBox"/>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="mBaselineLayerLabel">
+        <property name="text">
+         <string>Survey baseline layer</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="2" column="0" colspan="3">
     <widget class="QGroupBox" name="mStrataGroupBox">
      <property name="title">
       <string>Strata</string>
@@ -63,27 +113,6 @@
      </layout>
     </widget>
    </item>
-   <item row="0" column="0" colspan="2">
-    <layout class="QHBoxLayout" name="horizontalLayout_2">
-     <item>
-      <widget class="QLabel" name="mSurveyAreaLabel">
-       <property name="text">
-        <string>Survey area layer</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QComboBox" name="mSurveyAreaLayerComboBox"/>
-     </item>
-    </layout>
-   </item>
-   <item row="3" column="1">
-    <widget class="QPushButton" name="mCreateSampleButton">
-     <property name="text">
-      <string>Create sample sites</string>
-     </property>
-    </widget>
-   </item>
    <item row="3" column="0">
     <spacer name="horizontalSpacer">
      <property name="orientation">
@@ -97,32 +126,10 @@
      </property>
     </spacer>
    </item>
-   <item row="1" column="0" colspan="2">
-    <widget class="QGroupBox" name="mBaselineGroupBox">
-     <property name="title">
-      <string>Baseline</string>
-     </property>
-     <layout class="QGridLayout" name="gridLayout_2">
-      <item row="0" column="1">
-       <widget class="QComboBox" name="mSurveyBaselineLayerComboBox"/>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="mBaselineLayerLabel">
-        <property name="text">
-         <string>Survey baseline layer</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="4" column="0" colspan="2">
-    <widget class="QDialogButtonBox" name="buttonBox">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="standardButtons">
-      <set>QDialogButtonBox::Close</set>
+   <item row="3" column="1">
+    <widget class="QPushButton" name="mExportCsvButton">
+     <property name="text">
+      <string>Export csv files</string>
      </property>
     </widget>
    </item>
