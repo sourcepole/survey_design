@@ -32,6 +32,7 @@ class PointSurveyDialog( QDialog,  Ui_PointSurveyDialogBase ):
             
         fillAttributeComboBox( self.mMinimumDistanceAttributeComboBox,  layer )
         fillAttributeComboBox( self.mNSamplePointsComboBox,  layer )
+        fillAttributeComboBox( self.mStrataIdComboBox,  layer )
         
     def createSample( self ):        
         comboIndex = self.mStrataLayerComboBox.currentIndex()
@@ -56,6 +57,27 @@ class PointSurveyDialog( QDialog,  Ui_PointSurveyDialogBase ):
 
         p = QgsPointSample (  strataLayer, outputShape, nSamplePointsAttribute, minDistanceAttribute )
         p.createRandomPoints( None )
+        
+        #Store strata feature id / textual id in a dict
+        strataIdDict = {}
+        strataLayerId = self.mStrataLayerComboBox.itemData( comboIndex )
+        strataLayer = QgsMapLayerRegistry.instance().mapLayer( strataLayerId )
+        if not strataLayer is None:
+            strataIt = strataLayer.getFeatures()
+            for stratum in strataIt:
+                strataIdDict[stratum.id()] = stratum.attribute( self.mStrataIdComboBox.currentText() )
+        
+        #Add attribute station_co, e.g. A_2 usw.
+        samplePointLayer = QgsVectorLayer( outputShape,  "samplePoint",  "ogr" )
+        samplePointLayer.startEditing()
+        samplePointLayer.addAttribute( QgsField( 'station_co',  QVariant.String,  "String" )  )
+        newId = samplePointLayer.fieldNameIndex( 'station_co' )
+        iter = samplePointLayer.getFeatures()
+        for feature in iter:
+            stratumId = str( strataIdDict[ feature.attribute( "stratum_id" ) ] )
+            stationId = str( feature.attribute( "station_id" ) )
+            samplePointLayer.changeAttributeValue( feature.id(), newId,  stratumId + '_' + stationId )
+        samplePointLayer.commitChanges()
 
         s.setValue( '/SurveyPlugin/SaveDir', QFileInfo( outputShape ).absolutePath() )
         self.iface.addVectorLayer( outputShape, 'sample', 'ogr' )
