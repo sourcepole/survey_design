@@ -131,7 +131,7 @@ def writeStationTransectCSV( outputDirectory,  transectLayer,  stratumIdAttribut
         startPoint.transform( coordTransform )
         endPoint = geom.geometry().endPoint()
         endPoint.transform( coordTransform )
-        csvWriter.writerow([ surveyId,  int( feature.attribute( stratumIdAttribute ) ),  feature.attribute( transectIdAttribute ),  "",  "",  startPoint.y(),  startPoint.x(),  endPoint.y(), 
+        csvWriter.writerow([ surveyId,  str( feature.attribute( stratumIdAttribute ) ),  str( feature.attribute( transectIdAttribute ) ),  "",  "",  startPoint.y(),  startPoint.x(),  endPoint.y(), 
        endPoint.x(),  "", "" ])
         
         pass

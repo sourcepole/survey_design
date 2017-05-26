@@ -78,7 +78,7 @@ class TransectSurveyDialog( QDialog,  Ui_TransectSurveyDialogBase ):
         minDistanceUnits = QgsTransectSample.StrataUnits
         
         transectSample = QgsTransectSample(  strataMapLayer, strataId , strataMinDistance, strataNSamplePoints, minDistanceUnits, baselineMapLayer, True,
-        '', outputPointShape, outputLineShape,  usedBaselineShape,  0.0,  -1.0,  -1.0 )
+        '', outputPointShape, outputLineShape,  usedBaselineShape,  self.mMinimumTransectLengthSpinBox.value(),  -1.0,  -1.0 )
         pd = QProgressDialog(  'Calculating transects...', 'Abort',  0,  0,  self )
         pd.setWindowTitle( 'Transect generation' )
         pd.show();
