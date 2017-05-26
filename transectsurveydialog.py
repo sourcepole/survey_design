@@ -25,7 +25,6 @@ class TransectSurveyDialog( QDialog,  Ui_TransectSurveyDialogBase ):
         
         QObject.connect( self.mStrataLayerComboBox,  SIGNAL('currentIndexChanged (int)'),  self.strataLayerComboBoxChanged )
         QObject.connect( self.mCreateSampleButton,  SIGNAL( 'clicked()' ),  self.createSample )
-        QObject.connect( self.mExportCsvButton,  SIGNAL( 'clicked()'),  self.exportCSV )
         
     def strataLayerComboBoxChanged( self ):
         comboIndex = self.mStrataLayerComboBox.currentIndex()
@@ -42,23 +41,18 @@ class TransectSurveyDialog( QDialog,  Ui_TransectSurveyDialogBase ):
         
     def createSample( self ):
         s = QSettings()
-        saveDir = s.value( '/SurveyPlugin/SaveDir','')
-
-        outputPointShape = QFileDialog.getSaveFileName( self, QCoreApplication.translate( 'SurveyDesignDialog', 'Select output point shape file' ), saveDir, QCoreApplication.translate( 'SurveyDesignDialog', 'Shapefiles (*.shp)' ) )
-        if not outputPointShape:
+        
+        fileDialog = QFileDialog(  self,  QCoreApplication.translate( 'SurveyDesignDialog', 'Select output directory for result files' )  )
+        fileDialog.setFileMode( QFileDialog.Directory )
+        fileDialog.setOption( QFileDialog.ShowDirsOnly )
+        if fileDialog.exec_() != QDialog.Accepted:
             return
-        else:
-            saveDir = QFileInfo( outputPointShape ).absolutePath()
+            
+        saveDir = fileDialog.selectedFiles()[0]
 
-        outputLineShape = QFileDialog.getSaveFileName( self, QCoreApplication.translate( 'SurveyDesignDialog', 'Select output line shape file' ), saveDir, QCoreApplication.translate( 'SurveyDesignDialog', 'Shapefiles (*.shp)' ) )
-        if not outputLineShape:
-            return
-        else:
-            saveDir = QFileInfo( outputLineShape ).absolutePath()
-
-        usedBaselineShape = QFileDialog.getSaveFileName( self, QCoreApplication.translate( 'SurveyDesignDialog', 'Select output baseline file' ), saveDir, QCoreApplication.translate( 'SurveyDesignDialog', 'Shapefiles (*.shp)' ) )
-        if not usedBaselineShape:
-            return
+        outputPointShape = saveDir + '/transect_points.shp' 
+        outputLineShape = saveDir + '/transect_lines.shp' 
+        usedBaselineShape = saveDir + '/used_baselines.shp'
         
         #strata map layer
         strataMapLayer = self.stratumLayer()
@@ -89,21 +83,14 @@ class TransectSurveyDialog( QDialog,  Ui_TransectSurveyDialogBase ):
         gpxFileName = gpxFileInfo.path() + '/' + gpxFileInfo.baseName() + '.gpx'
         writePointShapeAsGPX( outputPointShape, 'station_co',   gpxFileName )
         
-        #write station  csv file
+        #write station  csv files
         transectLayer = QgsVectorLayer( outputLineShape,  "transect",  "ogr" )
-        csvDir = QFileInfo(  outputLineShape ).absolutePath() 
-        writeStationTransectCSV( csvDir,  transectLayer, "stratum_id",  "station_id",  "test_survey" )
+        writeStationTransectCSV( saveDir,  transectLayer, "stratum_id",  "station_id",  "test_survey" )
+        writeStratumCSV( fileDialog.selectedFiles()[0], self.stratumLayer(), self.mStrataIdAttributeComboBox.currentText(),  "test_survey" )
+        writeStratumBoundaryCSV( fileDialog.selectedFiles()[0], self.stratumLayer(), self.mStrataIdAttributeComboBox.currentText(),  "test_survey" )
         
         QApplication.restoreOverrideCursor()
-        
-    def exportCSV(self):
-        fileDialog = QFileDialog(  self,  QCoreApplication.translate( 'SurveyDesignDialog', 'Select output directory for csv files' )  )
-        fileDialog.setFileMode( QFileDialog.Directory )
-        fileDialog.setOption( QFileDialog.ShowDirsOnly )
-        if fileDialog.exec_() == QDialog.Accepted:
-            writeStratumCSV( fileDialog.selectedFiles()[0], self.stratumLayer(), self.mStrataIdAttributeComboBox.currentText(),  "test_survey" )
-            writeStratumBoundaryCSV( fileDialog.selectedFiles()[0], self.stratumLayer(), self.mStrataIdAttributeComboBox.currentText(),  "test_survey" )
-        
+
     def stratumLayer(self):
         comboIndex = self.mStrataLayerComboBox.currentIndex()
         strataLayerId = self.mStrataLayerComboBox.itemData( comboIndex )
