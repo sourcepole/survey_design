@@ -7,6 +7,8 @@ from ui_pointsurveydialogbase import Ui_PointSurveyDialogBase
 from surveyutils import fillLayerComboBox
 from surveyutils import fillAttributeComboBox
 from surveyutils import writePointShapeAsGPX
+from surveyutils import writeStratumCSV
+from surveyutils import writeStratumBoundaryCSV
 
 class PointSurveyDialog( QDialog,  Ui_PointSurveyDialogBase ):
     def __init__( self,  parent,  iface ):
@@ -34,7 +36,16 @@ class PointSurveyDialog( QDialog,  Ui_PointSurveyDialogBase ):
         fillAttributeComboBox( self.mNSamplePointsComboBox,  layer )
         fillAttributeComboBox( self.mStrataIdComboBox,  layer )
         
-    def createSample( self ):        
+    def createSample( self ):
+
+        fileDialog = QFileDialog(  self,  QCoreApplication.translate( 'SurveyDesignDialog', 'Select output directory for result files' )  )
+        fileDialog.setFileMode( QFileDialog.Directory )
+        fileDialog.setOption( QFileDialog.ShowDirsOnly )
+        if fileDialog.exec_() != QDialog.Accepted:
+            return
+            
+        saveDir = fileDialog.selectedFiles()[0]
+        
         comboIndex = self.mStrataLayerComboBox.currentIndex()
         strataLayerId = self.mStrataLayerComboBox.itemData( comboIndex )
         strataLayer = QgsMapLayerRegistry.instance().mapLayer( strataLayerId )
@@ -47,13 +58,7 @@ class PointSurveyDialog( QDialog,  Ui_PointSurveyDialogBase ):
         if len( minDistanceAttribute ) == 0 or len( nSamplePointsAttribute ) == 0:
             return
 
-        s = QSettings()
-        saveDir = s.value( '/SurveyPlugin/SaveDir','')
-
-        outputShape = QFileDialog.getSaveFileName( self, QCoreApplication.translate( 'SurveyDesignDialog', 'Select output shape file' ), saveDir, QCoreApplication.translate( 'SurveyDesignDialog', 'Shapefiles (*.shp)' ) )
-        print ( outputShape )
-        if not outputShape:
-            return
+        outputShape =  saveDir + "/point_sample.shp"
 
         p = QgsPointSample (  strataLayer, outputShape, nSamplePointsAttribute, minDistanceAttribute )
         p.createRandomPoints( None )
@@ -79,9 +84,12 @@ class PointSurveyDialog( QDialog,  Ui_PointSurveyDialogBase ):
             samplePointLayer.changeAttributeValue( feature.id(), newId,  stratumId + '_' + stationId )
         samplePointLayer.commitChanges()
 
-        s.setValue( '/SurveyPlugin/SaveDir', QFileInfo( outputShape ).absolutePath() )
         self.iface.addVectorLayer( outputShape, 'sample', 'ogr' )
         
         gpxFileInfo = QFileInfo( outputShape )
         gpxFileName = gpxFileInfo.path() + '/' + gpxFileInfo.baseName() + '.gpx'
         writePointShapeAsGPX( outputShape, 'id',   gpxFileName )
+        
+        #write csv files
+        writeStratumCSV( saveDir, strataLayer, self.mStrataIdComboBox.currentText(),  "test_survey" )
+        writeStratumBoundaryCSV( saveDir, strataLayer, self.mStrataIdComboBox.currentText(),  "test_survey" )
