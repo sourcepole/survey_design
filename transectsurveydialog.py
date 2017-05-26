@@ -9,6 +9,7 @@ from surveyutils import fillAttributeComboBox
 from surveyutils import writePointShapeAsGPX
 from surveyutils import writeStratumCSV
 from surveyutils import writeStratumBoundaryCSV
+from surveyutils import writeStationTransectCSV
 
 class TransectSurveyDialog( QDialog,  Ui_TransectSurveyDialogBase ):
     def __init__(self,  parent,  iface ):
@@ -87,6 +88,11 @@ class TransectSurveyDialog( QDialog,  Ui_TransectSurveyDialogBase ):
         gpxFileInfo = QFileInfo( outputPointShape )
         gpxFileName = gpxFileInfo.path() + '/' + gpxFileInfo.baseName() + '.gpx'
         writePointShapeAsGPX( outputPointShape, 'station_co',   gpxFileName )
+        
+        #write station  csv file
+        transectLayer = QgsVectorLayer( outputLineShape,  "transect",  "ogr" )
+        csvDir = QFileInfo(  outputLineShape ).absolutePath() 
+        writeStationTransectCSV( csvDir,  transectLayer, "stratum_id",  "station_id",  "test_survey" )
         
         QApplication.restoreOverrideCursor()
         

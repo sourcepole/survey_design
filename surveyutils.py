@@ -108,4 +108,32 @@ def writeStratumBoundaryCSV( outputDirectory,  stratumLayer,  stratumIdAttribute
                     for vertex in ring:
                         csvWriter.writerow( [vertex.x(),  vertex.y(),  stratumId,  surveyId] )
             pass
+            
+def writeStationTransectCSV( outputDirectory,  transectLayer,  stratumIdAttribute,  transectIdAttribute,  surveyId ):
+    if transectLayer is None:
+        return
+        
+    #all points have to be transformed to wgs84
+    coordTransform = QgsCoordinateTransform( transectLayer.crs(),  QgsCoordinateReferenceSystem( 'EPSG:4326' ) )
+        
+    outputFilePath = outputDirectory + "/" + "Station.csv"
+    csvWriter = csv.writer( open( outputFilePath,  "wb" ) )
+    
+    csvWriter.writerow( ["survey","stratum","transect","quadrat","area_m2","depth","start_lat","start_long","end_lat","end_long","in_out_bed","comments"] )
+    
+    iter = transectLayer.getFeatures()
+    for feature in iter:
+        geom = feature.geometry()
+        if geom is None or geom.type() != QGis.Line:
+            continue
+        
+        startPoint = geom.geometry().startPoint()
+        startPoint.transform( coordTransform )
+        endPoint = geom.geometry().endPoint()
+        endPoint.transform( coordTransform )
+        csvWriter.writerow([ surveyId,  int( feature.attribute( stratumIdAttribute ) ),  feature.attribute( transectIdAttribute ),  "",  "",  startPoint.y(),  startPoint.x(),  endPoint.y(), 
+       endPoint.x(),  "", "" ])
+        
+        pass
+
     
