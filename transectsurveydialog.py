@@ -4,12 +4,14 @@ from qgis.analysis import *
 from qgis.core import *
 from qgis.gui import *
 from ui_transectsurveydialogbase import Ui_TransectSurveyDialogBase
+from surveyproperties import SurveyProperties
 from surveyutils import fillLayerComboBox
 from surveyutils import fillAttributeComboBox
 from surveyutils import writePointShapeAsGPX
 from surveyutils import writeStratumCSV
 from surveyutils import writeStratumBoundaryCSV
 from surveyutils import writeStationTransectCSV
+from surveyutils import writeSurveyCSV
 
 class TransectSurveyDialog( QDialog,  Ui_TransectSurveyDialogBase ):
     def __init__(self,  parent,  iface ):
@@ -40,8 +42,6 @@ class TransectSurveyDialog( QDialog,  Ui_TransectSurveyDialogBase ):
         fillAttributeComboBox( self.mStrataIdAttributeComboBox,  layer )
         
     def createSample( self ):
-        s = QSettings()
-        
         fileDialog = QFileDialog(  self,  QCoreApplication.translate( 'SurveyDesignDialog', 'Select output directory for result files' )  )
         fileDialog.setFileMode( QFileDialog.Directory )
         fileDialog.setOption( QFileDialog.ShowDirsOnly )
@@ -49,6 +49,10 @@ class TransectSurveyDialog( QDialog,  Ui_TransectSurveyDialogBase ):
             return
             
         saveDir = fileDialog.selectedFiles()[0]
+        
+        surveyProps = SurveyProperties( self )
+        if surveyProps.exec_() == QDialog.Rejected:
+            return
 
         outputPointShape = saveDir + '/transect_points.shp' 
         outputLineShape = saveDir + '/transect_lines.shp' 
@@ -83,7 +87,9 @@ class TransectSurveyDialog( QDialog,  Ui_TransectSurveyDialogBase ):
         gpxFileName = gpxFileInfo.path() + '/' + gpxFileInfo.baseName() + '.gpx'
         writePointShapeAsGPX( outputPointShape, 'station_co',   gpxFileName )
         
-        #write station  csv files
+        #write csv files
+        #Survey.csv
+        writeSurveyCSV( fileDialog.selectedFiles()[0],  surveyProps.survey(),  surveyProps.projectCode(), surveyProps.date_s() , surveyProps.date_f(),  surveyProps.contactName(),  surveyProps.areas(), surveyProps.mainspp(),  surveyProps.comments() )
         transectLayer = QgsVectorLayer( outputLineShape,  "transect",  "ogr" )
         writeStationTransectCSV( saveDir,  transectLayer, "stratum_id",  "station_id",  "test_survey" )
         writeStratumCSV( fileDialog.selectedFiles()[0], self.stratumLayer(), self.mStrataIdAttributeComboBox.currentText(),  "test_survey" )

@@ -4,11 +4,13 @@ from qgis.analysis import *
 from qgis.core import *
 from qgis.gui import *
 from ui_pointsurveydialogbase import Ui_PointSurveyDialogBase
+from surveyproperties import SurveyProperties
 from surveyutils import fillLayerComboBox
 from surveyutils import fillAttributeComboBox
 from surveyutils import writePointShapeAsGPX
 from surveyutils import writeStratumCSV
 from surveyutils import writeStratumBoundaryCSV
+from surveyutils import writeSurveyCSV
 
 class PointSurveyDialog( QDialog,  Ui_PointSurveyDialogBase ):
     def __init__( self,  parent,  iface ):
@@ -37,6 +39,10 @@ class PointSurveyDialog( QDialog,  Ui_PointSurveyDialogBase ):
         fillAttributeComboBox( self.mStrataIdComboBox,  layer )
         
     def createSample( self ):
+        
+        surveyProps = SurveyProperties( self )
+        if surveyProps.exec_() == QDialog.Rejected:
+            return
 
         fileDialog = QFileDialog(  self,  QCoreApplication.translate( 'SurveyDesignDialog', 'Select output directory for result files' )  )
         fileDialog.setFileMode( QFileDialog.Directory )
@@ -91,5 +97,6 @@ class PointSurveyDialog( QDialog,  Ui_PointSurveyDialogBase ):
         writePointShapeAsGPX( outputShape, 'station_co', gpxFileName )
         
         #write csv files
+        writeSurveyCSV( saveDir,  surveyProps.survey(),  surveyProps.projectCode(), surveyProps.date_s() , surveyProps.date_f(),  surveyProps.contactName(),  surveyProps.areas(), surveyProps.mainspp(),  surveyProps.comments() )
         writeStratumCSV( saveDir, strataLayer, self.mStrataIdComboBox.currentText(),  "test_survey" )
         writeStratumBoundaryCSV( saveDir, strataLayer, self.mStrataIdComboBox.currentText(),  "test_survey" )

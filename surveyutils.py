@@ -135,5 +135,11 @@ def writeStationTransectCSV( outputDirectory,  transectLayer,  stratumIdAttribut
        endPoint.x(),  "", "" ])
         
         pass
+        
+def writeSurveyCSV( outputDirectory,  survey,  projectCode,  date_s,  date_f,  contactName,  area,  mainspp,  comments ):
+    outputFilePath = outputDirectory + "/" + "Survey.csv"
+    csvWriter = csv.writer( open( outputFilePath,  "wb" ) )
+    csvWriter.writerow( ["survey","proj_code","date_s","date_f","contact_name","areas","mainspp","comments"] )
+    csvWriter.writerow( [survey,  projectCode,  date_s,  date_f,  contactName,  area,  mainspp,  comments] )
 
     
