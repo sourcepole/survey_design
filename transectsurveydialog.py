@@ -10,7 +10,7 @@ from surveyutils import fillAttributeComboBox
 from surveyutils import writePointShapeAsGPX
 from surveyutils import writeStratumCSV
 from surveyutils import writeStratumBoundaryCSV
-from surveyutils import writeStationTransectCSV
+from surveyutils import writeStationCSV
 from surveyutils import writeSurveyCSV
 
 class TransectSurveyDialog( QDialog,  Ui_TransectSurveyDialogBase ):
@@ -91,9 +91,9 @@ class TransectSurveyDialog( QDialog,  Ui_TransectSurveyDialogBase ):
         #Survey.csv
         writeSurveyCSV( fileDialog.selectedFiles()[0],  surveyProps.survey(),  surveyProps.projectCode(), surveyProps.date_s() , surveyProps.date_f(),  surveyProps.contactName(),  surveyProps.areas(), surveyProps.mainspp(),  surveyProps.comments() )
         transectLayer = QgsVectorLayer( outputLineShape,  "transect",  "ogr" )
-        writeStationTransectCSV( saveDir,  transectLayer, "stratum_id",  "station_id",  "test_survey" )
-        writeStratumCSV( fileDialog.selectedFiles()[0], self.stratumLayer(), self.mStrataIdAttributeComboBox.currentText(),  "test_survey" )
-        writeStratumBoundaryCSV( fileDialog.selectedFiles()[0], self.stratumLayer(), self.mStrataIdAttributeComboBox.currentText(),  "test_survey" )
+        writeStationCSV( saveDir,  transectLayer, "stratum_id",  "station_id",  surveyProps.survey() )
+        writeStratumCSV( fileDialog.selectedFiles()[0], self.stratumLayer(), self.mStrataIdAttributeComboBox.currentText(),  surveyProps.survey() )
+        writeStratumBoundaryCSV( fileDialog.selectedFiles()[0], self.stratumLayer(), self.mStrataIdAttributeComboBox.currentText(),  surveyProps.survey() )
         
         QApplication.restoreOverrideCursor()
 

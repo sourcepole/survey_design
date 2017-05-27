@@ -109,7 +109,7 @@ def writeStratumBoundaryCSV( outputDirectory,  stratumLayer,  stratumIdAttribute
                         csvWriter.writerow( [vertex.x(),  vertex.y(),  stratumId,  surveyId] )
             pass
             
-def writeStationTransectCSV( outputDirectory,  transectLayer,  stratumIdAttribute,  transectIdAttribute,  surveyId ):
+def writeStationCSV( outputDirectory,  transectLayer,  stratumIdAttribute,  transectIdAttribute,  surveyId ):
     if transectLayer is None:
         return
         
@@ -124,17 +124,17 @@ def writeStationTransectCSV( outputDirectory,  transectLayer,  stratumIdAttribut
     iter = transectLayer.getFeatures()
     for feature in iter:
         geom = feature.geometry()
-        if geom is None or geom.type() != QGis.Line:
-            continue
         
-        startPoint = geom.geometry().startPoint()
-        startPoint.transform( coordTransform )
-        endPoint = geom.geometry().endPoint()
-        endPoint.transform( coordTransform )
-        csvWriter.writerow([ surveyId,  str( feature.attribute( stratumIdAttribute ) ),  str( feature.attribute( transectIdAttribute ) ),  "",  "",  startPoint.y(),  startPoint.x(),  endPoint.y(), 
-       endPoint.x(),  "", "" ])
-        
-        pass
+        if geom.type() == QGis.Line:
+            startPoint = geom.geometry().startPoint()
+            startPoint.transform( coordTransform )
+            endPoint = geom.geometry().endPoint()
+            endPoint.transform( coordTransform )
+            csvWriter.writerow([ surveyId,  str( feature.attribute( stratumIdAttribute ) ),  str( feature.attribute( transectIdAttribute ) ),  "",  "",  startPoint.y(),  startPoint.x(),  endPoint.y(), endPoint.x(),  "", "" ])
+        elif geom.type() == QGis.Point:
+            point = geom.geometry()
+            point.transform( coordTransform )
+            csvWriter.writerow([ surveyId,  str( feature.attribute( stratumIdAttribute ) ),  str( feature.attribute( transectIdAttribute ) ),  "",  "",  point.y(),  point.x(),  '',  '',  '', '' ] )
         
 def writeSurveyCSV( outputDirectory,  survey,  projectCode,  date_s,  date_f,  contactName,  area,  mainspp,  comments ):
     outputFilePath = outputDirectory + "/" + "Survey.csv"

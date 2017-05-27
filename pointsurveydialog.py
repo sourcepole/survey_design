@@ -11,6 +11,7 @@ from surveyutils import writePointShapeAsGPX
 from surveyutils import writeStratumCSV
 from surveyutils import writeStratumBoundaryCSV
 from surveyutils import writeSurveyCSV
+from surveyutils import writeStationCSV
 
 class PointSurveyDialog( QDialog,  Ui_PointSurveyDialogBase ):
     def __init__( self,  parent,  iface ):
@@ -81,12 +82,15 @@ class PointSurveyDialog( QDialog,  Ui_PointSurveyDialogBase ):
         #Add attribute station_co, e.g. A_2 usw.
         samplePointLayer = QgsVectorLayer( outputShape,  "samplePoint",  "ogr" )
         samplePointLayer.startEditing()
+        samplePointLayer.addAttribute( QgsField( 'stratumid',  QVariant.String,  "String" ) )
         samplePointLayer.addAttribute( QgsField( 'station_co',  QVariant.String,  "String" )  )
         newId = samplePointLayer.fieldNameIndex( 'station_co' )
+        newStratumId = samplePointLayer.fieldNameIndex( 'stratumid' )
         iter = samplePointLayer.getFeatures()
         for feature in iter:
             stratumId = str( strataIdDict[ feature.attribute( "stratum_id" ) ] )
             stationId = str( feature.attribute( "station_id" ) )
+            samplePointLayer.changeAttributeValue( feature.id(),  newStratumId,  stratumId )
             samplePointLayer.changeAttributeValue( feature.id(), newId,  stratumId + '_' + stationId )
         samplePointLayer.commitChanges()
 
@@ -98,5 +102,6 @@ class PointSurveyDialog( QDialog,  Ui_PointSurveyDialogBase ):
         
         #write csv files
         writeSurveyCSV( saveDir,  surveyProps.survey(),  surveyProps.projectCode(), surveyProps.date_s() , surveyProps.date_f(),  surveyProps.contactName(),  surveyProps.areas(), surveyProps.mainspp(),  surveyProps.comments() )
-        writeStratumCSV( saveDir, strataLayer, self.mStrataIdComboBox.currentText(),  "test_survey" )
-        writeStratumBoundaryCSV( saveDir, strataLayer, self.mStrataIdComboBox.currentText(),  "test_survey" )
+        writeStratumCSV( saveDir, strataLayer, self.mStrataIdComboBox.currentText(),  surveyProps.survey() )
+        writeStratumBoundaryCSV( saveDir, strataLayer, self.mStrataIdComboBox.currentText(),  surveyProps.survey() )
+        writeStationCSV( saveDir,  samplePointLayer, "stratumid",  "station_id",  surveyProps.survey() )
