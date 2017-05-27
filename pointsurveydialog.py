@@ -88,7 +88,7 @@ class PointSurveyDialog( QDialog,  Ui_PointSurveyDialogBase ):
         
         gpxFileInfo = QFileInfo( outputShape )
         gpxFileName = gpxFileInfo.path() + '/' + gpxFileInfo.baseName() + '.gpx'
-        writePointShapeAsGPX( outputShape, 'id',   gpxFileName )
+        writePointShapeAsGPX( outputShape, 'station_co', gpxFileName )
         
         #write csv files
         writeStratumCSV( saveDir, strataLayer, self.mStrataIdComboBox.currentText(),  "test_survey" )
