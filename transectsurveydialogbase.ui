@@ -70,15 +70,28 @@
       <string>Strata</string>
      </property>
      <layout class="QGridLayout" name="gridLayout">
-      <item row="1" column="0">
+      <item row="3" column="1">
+       <widget class="QComboBox" name="mNSamplePointsComboBox"/>
+      </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="mStrataLayerComboBox"/>
+      </item>
+      <item row="2" column="0">
        <widget class="QLabel" name="mMinDistanceLabel">
         <property name="text">
          <string>Minimum distance attribute</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
+      <item row="2" column="1">
        <widget class="QComboBox" name="mMinimumDistanceAttributeComboBox"/>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="mNSamplePointsAttribute">
+        <property name="text">
+         <string>N sample points attribute</string>
+        </property>
+       </widget>
       </item>
       <item row="0" column="0">
        <widget class="QLabel" name="mStrataLayerLabel">
@@ -87,28 +100,15 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
-       <widget class="QComboBox" name="mStrataLayerComboBox"/>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="mNSamplePointsAttribute">
-        <property name="text">
-         <string>N sample points attribute</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1">
-       <widget class="QComboBox" name="mStrataIdAttributeComboBox"/>
-      </item>
-      <item row="2" column="1">
-       <widget class="QComboBox" name="mNSamplePointsComboBox"/>
-      </item>
-      <item row="3" column="0">
+      <item row="1" column="0">
        <widget class="QLabel" name="mStrataIdAttributeLabel">
         <property name="text">
          <string>ID attribute</string>
         </property>
        </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QComboBox" name="mStrataIdAttributeComboBox"/>
       </item>
      </layout>
     </widget>

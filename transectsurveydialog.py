@@ -42,6 +42,10 @@ class TransectSurveyDialog( QDialog,  Ui_TransectSurveyDialogBase ):
         fillAttributeComboBox( self.mStrataIdAttributeComboBox,  layer )
         
     def createSample( self ):
+        surveyProps = SurveyProperties( self )
+        if surveyProps.exec_() == QDialog.Rejected:
+            return
+        
         fileDialog = QFileDialog(  self,  QCoreApplication.translate( 'SurveyDesignDialog', 'Select output directory for result files' )  )
         fileDialog.setFileMode( QFileDialog.Directory )
         fileDialog.setOption( QFileDialog.ShowDirsOnly )
@@ -49,10 +53,6 @@ class TransectSurveyDialog( QDialog,  Ui_TransectSurveyDialogBase ):
             return
             
         saveDir = fileDialog.selectedFiles()[0]
-        
-        surveyProps = SurveyProperties( self )
-        if surveyProps.exec_() == QDialog.Rejected:
-            return
 
         outputPointShape = saveDir + '/transect_points.shp' 
         outputLineShape = saveDir + '/transect_lines.shp' 
