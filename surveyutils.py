@@ -81,7 +81,7 @@ def writeStratumCSV( outputDirectory,  stratumLayer,  stratumIdAttribute,  surve
         if not geom is None:
             geomArea = geom.area()
         stratumId = feature.attribute( stratumIdAttribute )
-        csvWriter.writerow( [surveyId,  stratumId,  geomArea,  QDate.currentDate().year(), ""] )
+        csvWriter.writerow( [surveyId.encode( "utf-8" ),  stratumId.encode( "utf-8" ),  geomArea,  QDate.currentDate().year(), ""] )
         
 def writeStratumBoundaryCSV( outputDirectory,  stratumLayer,  stratumIdAttribute,  surveyId ):
     if stratumLayer is None:
@@ -106,7 +106,7 @@ def writeStratumBoundaryCSV( outputDirectory,  stratumLayer,  stratumIdAttribute
             for part in featureCoords:
                 for ring in part:
                     for vertex in ring:
-                        csvWriter.writerow( [vertex.x(),  vertex.y(),  stratumId,  surveyId] )
+                        csvWriter.writerow( [vertex.x(),  vertex.y(),  stratumId.encode( "utf-8" ),  surveyId.encode( "utf-8" )] )
             pass
             
 def writeStationCSV( outputDirectory,  transectLayer,  stratumIdAttribute,  transectIdAttribute,  surveyId ):
@@ -130,16 +130,17 @@ def writeStationCSV( outputDirectory,  transectLayer,  stratumIdAttribute,  tran
             startPoint.transform( coordTransform )
             endPoint = geom.geometry().endPoint()
             endPoint.transform( coordTransform )
-            csvWriter.writerow([ surveyId,  str( feature.attribute( stratumIdAttribute ) ),  str( feature.attribute( transectIdAttribute ) ),  "",  "",  startPoint.y(),  startPoint.x(),  endPoint.y(), endPoint.x(),  "", "" ])
+            csvWriter.writerow([ surveyId.encode( "utf-8" ),  str( feature.attribute( stratumIdAttribute ) ).encode( "utf-8" ),  str( feature.attribute( transectIdAttribute ) ).encode( "utf-8" ),  "",  "",  startPoint.y(),  startPoint.x(),  endPoint.y(), endPoint.x(),  "", "" ])
         elif geom.type() == QGis.Point:
             point = geom.geometry()
             point.transform( coordTransform )
-            csvWriter.writerow([ surveyId,  str( feature.attribute( stratumIdAttribute ) ),  str( feature.attribute( transectIdAttribute ) ),  "",  "",  point.y(),  point.x(),  '',  '',  '', '' ] )
+            csvWriter.writerow([ surveyId.encode( "utf-8" ),  str( feature.attribute( stratumIdAttribute ) ).encode( "utf-8" ),  str( feature.attribute( transectIdAttribute ) ).encode( "utf-8" ),  "",  "",  point.y(),  point.x(),  '',  '',  '', '' ] )
         
 def writeSurveyCSV( outputDirectory,  survey,  projectCode,  date_s,  date_f,  contactName,  area,  mainspp,  comments ):
     outputFilePath = outputDirectory + "/" + "Survey.csv"
     csvWriter = csv.writer( open( outputFilePath,  "wb" ) )
     csvWriter.writerow( ["survey","proj_code","date_s","date_f","contact_name","areas","mainspp","comments"] )
-    csvWriter.writerow( [survey,  projectCode,  date_s,  date_f,  contactName,  area,  mainspp,  comments] )
+    csvWriter.writerow( [survey.encode( "utf-8" ),  projectCode.encode( "utf-8" ),  date_s,  date_f,  contactName.encode( "utf-8" ),  area.encode( "utf-8" ),  mainspp.encode( "utf-8" ),  comments.encode( "utf-8" )] )
+    
 
     
