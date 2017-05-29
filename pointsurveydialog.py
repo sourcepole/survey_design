@@ -94,8 +94,6 @@ class PointSurveyDialog( QDialog,  Ui_PointSurveyDialogBase ):
             samplePointLayer.changeAttributeValue( feature.id(), newId,  stratumId + '_' + stationId )
         samplePointLayer.commitChanges()
 
-        self.iface.addVectorLayer( outputShape, 'sample', 'ogr' )
-        
         gpxFileInfo = QFileInfo( outputShape )
         gpxFileName = gpxFileInfo.path() + '/' + gpxFileInfo.baseName() + '.gpx'
         writePointShapeAsGPX( outputShape, 'station_co', gpxFileName )
@@ -105,3 +103,5 @@ class PointSurveyDialog( QDialog,  Ui_PointSurveyDialogBase ):
         writeStratumCSV( saveDir, strataLayer, self.mStrataIdComboBox.currentText(),  surveyProps.survey() )
         writeStratumBoundaryCSV( saveDir, strataLayer, self.mStrataIdComboBox.currentText(),  surveyProps.survey() )
         writeStationCSV( saveDir,  samplePointLayer, "stratumid",  "station_id",  surveyProps.survey() )
+        
+        self.iface.addVectorLayer( outputShape, 'point_sample', 'ogr' )

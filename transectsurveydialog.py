@@ -95,6 +95,9 @@ class TransectSurveyDialog( QDialog,  Ui_TransectSurveyDialogBase ):
         writeStratumCSV( fileDialog.selectedFiles()[0], self.stratumLayer(), self.mStrataIdAttributeComboBox.currentText(),  surveyProps.survey() )
         writeStratumBoundaryCSV( fileDialog.selectedFiles()[0], self.stratumLayer(), self.mStrataIdAttributeComboBox.currentText(),  surveyProps.survey() )
         
+        self.iface.addVectorLayer( outputLineShape, 'transects', 'ogr' )
+        self.iface.addVectorLayer( outputPointShape,  'transect_stations',  'ogr' )
+        
         QApplication.restoreOverrideCursor()
 
     def stratumLayer(self):
