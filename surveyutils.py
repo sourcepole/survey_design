@@ -142,5 +142,14 @@ def writeSurveyCSV( outputDirectory,  survey,  projectCode,  date_s,  date_f,  c
     csvWriter.writerow( ["survey","proj_code","date_s","date_f","contact_name","areas","mainspp","comments"] )
     csvWriter.writerow( [survey.encode( "utf-8" ),  projectCode.encode( "utf-8" ),  date_s,  date_f,  contactName.encode( "utf-8" ),  area.encode( "utf-8" ),  mainspp.encode( "utf-8" ),  comments.encode( "utf-8" )] )
     
+def writeCatchCSV( outputDirectory ):
+    outputFilePath = outputDirectory + "/Catch.csv"
+    csvWriter = csv.writer( open( outputFilePath,  "wb" ) )
+    csvWriter.writerow( ["survey","stratum","transect","quadrat","replicate","species","no_fish","lf_taken","samp_meth","meas_meth", "weight","wt_meth", "samp_wt"] )
+    
+def writeLengthCSV( outputDirectory ):
+    outputFilePath = outputDirectory + "/Length.csv"
+    csvWriter = csv.writer( open( outputFilePath,  "wb" ) )
+    csvWriter.writerow( ["survey","stratum","transect","quadrat","replicate","species","lgth","percent_samp","no_a"] )
 
     

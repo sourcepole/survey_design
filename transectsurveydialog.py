@@ -12,6 +12,8 @@ from surveyutils import writeStratumCSV
 from surveyutils import writeStratumBoundaryCSV
 from surveyutils import writeStationCSV
 from surveyutils import writeSurveyCSV
+from surveyutils import writeCatchCSV
+from surveyutils import writeLengthCSV
 
 class TransectSurveyDialog( QDialog,  Ui_TransectSurveyDialogBase ):
     def __init__(self,  parent,  iface ):
@@ -94,6 +96,8 @@ class TransectSurveyDialog( QDialog,  Ui_TransectSurveyDialogBase ):
         writeStationCSV( saveDir,  transectLayer, "stratum_id",  "station_id",  surveyProps.survey() )
         writeStratumCSV( fileDialog.selectedFiles()[0], self.stratumLayer(), self.mStrataIdAttributeComboBox.currentText(),  surveyProps.survey() )
         writeStratumBoundaryCSV( fileDialog.selectedFiles()[0], self.stratumLayer(), self.mStrataIdAttributeComboBox.currentText(),  surveyProps.survey() )
+        writeCatchCSV( saveDir )
+        writeLengthCSV( saveDir )
         
         self.iface.addVectorLayer( outputLineShape, 'transects', 'ogr' )
         self.iface.addVectorLayer( outputPointShape,  'transect_stations',  'ogr' )

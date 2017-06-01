@@ -12,6 +12,8 @@ from surveyutils import writeStratumCSV
 from surveyutils import writeStratumBoundaryCSV
 from surveyutils import writeSurveyCSV
 from surveyutils import writeStationCSV
+from surveyutils import writeCatchCSV
+from surveyutils import writeLengthCSV
 
 class PointSurveyDialog( QDialog,  Ui_PointSurveyDialogBase ):
     def __init__( self,  parent,  iface ):
@@ -103,5 +105,7 @@ class PointSurveyDialog( QDialog,  Ui_PointSurveyDialogBase ):
         writeStratumCSV( saveDir, strataLayer, self.mStrataIdComboBox.currentText(),  surveyProps.survey() )
         writeStratumBoundaryCSV( saveDir, strataLayer, self.mStrataIdComboBox.currentText(),  surveyProps.survey() )
         writeStationCSV( saveDir,  samplePointLayer, "stratumid",  "station_id",  surveyProps.survey() )
+        writeCatchCSV( saveDir )
+        writeLengthCSV( saveDir )
         
         self.iface.addVectorLayer( outputShape, 'point_sample', 'ogr' )
