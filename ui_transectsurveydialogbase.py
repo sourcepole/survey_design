@@ -104,6 +104,7 @@ class Ui_TransectSurveyDialogBase(object):
         sizePolicy.setHeightForWidth(self.mMinimumTransectLengthSpinBox.sizePolicy().hasHeightForWidth())
         self.mMinimumTransectLengthSpinBox.setSizePolicy(sizePolicy)
         self.mMinimumTransectLengthSpinBox.setMinimum(-1.0)
+        self.mMinimumTransectLengthSpinBox.setMaximum(999999999.0)
         self.mMinimumTransectLengthSpinBox.setProperty("value", -1.0)
         self.mMinimumTransectLengthSpinBox.setObjectName(_fromUtf8("mMinimumTransectLengthSpinBox"))
         self.horizontalLayout.addWidget(self.mMinimumTransectLengthSpinBox)
