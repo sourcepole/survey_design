@@ -85,9 +85,39 @@ class TransectSurveyDialog( QDialog,  Ui_TransectSurveyDialogBase ):
         QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
         transectSample.createSample( pd )
         
+        #open line shape and create a dict station_id / bearing
+        #first find out 'station_co' attribute name
+        transectLineLayer = QgsVectorLayer( outputLineShape,  'transectLineLayer',  'ogr' )
+        fields = transectLineLayer.pendingFields()
+        stationCodeFieldName = "station_co"
+        for field in fields:
+            if field.name().startswith( "station_co" ):
+                stationCodeFieldName = field.name()
+                break
+        
+        bearingDict = {}
+        
+        transectLineIt = transectLineLayer.getFeatures()
+        for transectLineFeature in transectLineIt:
+            station_co = transectLineFeature.attribute( stationCodeFieldName )
+            bearing = transectLineFeature.attribute( 'bearing' )
+            bearingDict[station_co] = bearing
+        
+        #write bearing into output point shape
+        transectPointLayer = QgsVectorLayer( outputPointShape,  'transectPointLayer',  'ogr' )
+        transectPointLayer.startEditing()
+        transectPointLayer.addAttribute( QgsField( 'bearing',  QVariant.Double,  "Double" ) )
+        bearingIndex = transectPointLayer.fieldNameIndex( 'bearing' )
+        transectPointIt = transectPointLayer.getFeatures()
+        for transectPointFeature in transectPointIt:
+            station_co = transectPointFeature.attribute( stationCodeFieldName )
+            transectPointLayer.changeAttributeValue( transectPointFeature.id(),  bearingIndex,  bearingDict[ station_co] )
+        transectPointLayer.commitChanges()
+        
+        #write gpx file
         gpxFileInfo = QFileInfo( outputPointShape )
         gpxFileName = gpxFileInfo.path() + '/' + gpxFileInfo.baseName() + '.gpx'
-        writePointShapeAsGPX( outputPointShape, 'station_co',   gpxFileName )
+        writePointShapeAsGPX( outputPointShape,  stationCodeFieldName, 'bearing',   gpxFileName )
         
         #write csv files
         #Survey.csv

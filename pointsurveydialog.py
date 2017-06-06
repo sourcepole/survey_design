@@ -98,7 +98,7 @@ class PointSurveyDialog( QDialog,  Ui_PointSurveyDialogBase ):
 
         gpxFileInfo = QFileInfo( outputShape )
         gpxFileName = gpxFileInfo.path() + '/' + gpxFileInfo.baseName() + '.gpx'
-        writePointShapeAsGPX( outputShape, 'station_co', gpxFileName )
+        writePointShapeAsGPX( outputShape, 'station_co', '',  gpxFileName )
         
         #write csv files
         writeSurveyCSV( saveDir,  surveyProps.survey(),  surveyProps.projectCode(), surveyProps.date_s() , surveyProps.date_f(),  surveyProps.contactName(),  surveyProps.areas(), surveyProps.mainspp(),  surveyProps.comments() )

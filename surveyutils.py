@@ -28,7 +28,7 @@ def fillAttributeComboBox( comboBox,  vectorLayer ):
         for field in fieldList:
             comboBox.addItem( field.name() )
             
-def writePointShapeAsGPX( shapePath,  nameAttribute,  outputFileName ):
+def writePointShapeAsGPX( shapePath,  nameAttribute,  commentAttribute,  outputFileName ):
     #open shape layer
     layer = QgsVectorLayer( shapePath,  "gpx",  "ogr" )
     if not layer.isValid() or layer.geometryType() != QGis.Point:
@@ -61,6 +61,12 @@ def writePointShapeAsGPX( shapePath,  nameAttribute,  outputFileName ):
         nameText = gpxDoc.createTextNode( str( feature.attribute( nameAttribute ) ) )
         nameElem.appendChild( nameText )
         waypointElem.appendChild( nameElem )
+        
+        if len( commentAttribute ) > 0:
+            commentElem = gpxDoc.createElementNS( "http://www.topografix.com/GPX/1/1",  "cmt" )
+            commentText = gpxDoc.createTextNode( str( feature.attribute( commentAttribute ) ) )
+            commentElem.appendChild( commentText )
+            waypointElem.appendChild( commentElem )
         
         gpxElem.appendChild( waypointElem )
         
