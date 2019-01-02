@@ -160,6 +160,9 @@
       </item>
       <item row="2" column="1">
        <widget class="QDoubleSpinBox" name="mMinimumTransectLengthSpinBox">
+        <property name="decimals">
+         <number>3</number>
+        </property>
         <property name="maximum">
          <double>99999999.000000000000000</double>
         </property>

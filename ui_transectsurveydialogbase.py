@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'transectsurveydialogbase.ui'
 #
-# Created by: PyQt4 UI code generator 4.11.4
+# Created by: PyQt4 UI code generator 4.12.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -103,6 +103,7 @@ class Ui_TransectSurveyDialogBase(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.mMinimumTransectLengthSpinBox.sizePolicy().hasHeightForWidth())
         self.mMinimumTransectLengthSpinBox.setSizePolicy(sizePolicy)
+        self.mMinimumTransectLengthSpinBox.setDecimals(3)
         self.mMinimumTransectLengthSpinBox.setMinimum(-1.0)
         self.mMinimumTransectLengthSpinBox.setMaximum(999999999.0)
         self.mMinimumTransectLengthSpinBox.setProperty("value", -1.0)
