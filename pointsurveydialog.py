@@ -5,15 +5,9 @@ from qgis.core import *
 from qgis.gui import *
 from ui_pointsurveydialogbase import Ui_PointSurveyDialogBase
 from surveyproperties import SurveyProperties
-from surveyutils import fillLayerComboBox
-from surveyutils import fillAttributeComboBox
-from surveyutils import writePointShapeAsGPX
-from surveyutils import writeStratumCSV
-from surveyutils import writeStratumBoundaryCSV
-from surveyutils import writeSurveyCSV
-from surveyutils import writeStationCSV
-from surveyutils import writeCatchCSV
-from surveyutils import writeLengthCSV
+from surveyutils import *
+
+from xlsxwriter import *
 
 class PointSurveyDialog( QDialog,  Ui_PointSurveyDialogBase ):
     def __init__( self,  parent,  iface ):
@@ -99,6 +93,16 @@ class PointSurveyDialog( QDialog,  Ui_PointSurveyDialogBase ):
         gpxFileInfo = QFileInfo( outputShape )
         gpxFileName = gpxFileInfo.path() + '/' + gpxFileInfo.baseName() + '.gpx'
         writePointShapeAsGPX( outputShape, 'station_co', '',  gpxFileName )
+        
+        #write XLSX output
+        workbook = Workbook( saveDir + '/survey.xlsx')
+        writeSurveyXLSX( workbook, surveyProps.survey(),  surveyProps.projectCode(), surveyProps.date_s() , surveyProps.date_f(),  surveyProps.contactName(),  surveyProps.areas(), surveyProps.mainspp(),  surveyProps.comments() )
+        writeStratumXLSX( workbook, strataLayer, self.mStrataIdComboBox.currentText(),  surveyProps.survey() )
+        writeStratumBoundaryXLSX( workbook, strataLayer, self.mStrataIdComboBox.currentText(),  surveyProps.survey() )
+        writeStationXLSX( workbook, samplePointLayer, "stratumid",  "station_id",  surveyProps.survey() )
+        writeCatchXLSX( workbook )
+        writeLengthXLSX( workbook )
+        workbook.close()
         
         #write csv files
         writeSurveyCSV( saveDir,  surveyProps.survey(),  surveyProps.projectCode(), surveyProps.date_s() , surveyProps.date_f(),  surveyProps.contactName(),  surveyProps.areas(), surveyProps.mainspp(),  surveyProps.comments() )
